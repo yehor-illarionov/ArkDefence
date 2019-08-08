@@ -7,19 +7,72 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace ArkDefence.AspNetCore.Host.Data.Migrations
+namespace ArkDefence.AspNetCore.Host.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190807215824_history1")]
-    partial class history1
+    [Migration("20190808092227_initg")]
+    partial class initg
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.0.0-preview7.19362.6")
+                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("ArkDefence.AspNetCore.Host.Models.Card", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<bool>("Deleted");
+
+                    b.Property<DateTime>("DeletionTime");
+
+                    b.Property<string>("PersonId");
+
+                    b.Property<long?>("PersonId1");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PersonId1");
+
+                    b.ToTable("ArkDefence_Cards");
+                });
+
+            modelBuilder.Entity("ArkDefence.AspNetCore.Host.Models.ClientUpdateQueue", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ActionType");
+
+                    b.Property<DateTime>("CompletionTime");
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<string>("Data");
+
+                    b.Property<int>("EntityType");
+
+                    b.Property<bool>("IsCompleted");
+
+                    b.Property<bool>("IsFailed");
+
+                    b.Property<string>("Reason");
+
+                    b.Property<string>("SystemControllerId");
+
+                    b.Property<string>("TennantId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ArkDefence_ClientUpdateQueue");
+                });
 
             modelBuilder.Entity("ArkDefence.AspNetCore.Host.Models.MessageHistory", b =>
                 {
@@ -36,6 +89,148 @@ namespace ArkDefence.AspNetCore.Host.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("App_MessageHistory");
+                });
+
+            modelBuilder.Entity("ArkDefence.AspNetCore.Host.Models.Person", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<bool>("Deleted");
+
+                    b.Property<DateTime>("DeletionTime");
+
+                    b.Property<string>("ImageUri");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Sub");
+
+                    b.Property<string>("TennantId");
+
+                    b.Property<byte[]>("Timestamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TennantId");
+
+                    b.ToTable("ArkDefence_Users");
+                });
+
+            modelBuilder.Entity("ArkDefence.AspNetCore.Host.Models.PersonSystemController", b =>
+                {
+                    b.Property<long>("PersonId");
+
+                    b.Property<string>("SystemControllerId");
+
+                    b.HasKey("PersonId", "SystemControllerId");
+
+                    b.HasIndex("SystemControllerId");
+
+                    b.ToTable("ArkDefence_PersonSystemController");
+                });
+
+            modelBuilder.Entity("ArkDefence.AspNetCore.Host.Models.SystemController", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Alias");
+
+                    b.Property<string>("ClientSecret");
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<bool>("Deleted");
+
+                    b.Property<DateTime>("DeletionTime");
+
+                    b.Property<string>("TennantId");
+
+                    b.Property<byte[]>("Timestamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<string>("Version");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TennantId");
+
+                    b.ToTable("ArkDefence_SystemController");
+                });
+
+            modelBuilder.Entity("ArkDefence.AspNetCore.Host.Models.Tennant", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Alias");
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<bool>("Deleted");
+
+                    b.Property<DateTime>("DeletionTime");
+
+                    b.Property<string>("Email");
+
+                    b.Property<string>("Phone");
+
+                    b.Property<byte[]>("Timestamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ArkDefence_Tennant");
+                });
+
+            modelBuilder.Entity("ArkDefence.AspNetCore.Host.Models.Terminal", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Alias");
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<bool>("Deleted");
+
+                    b.Property<DateTime>("DeletionTime");
+
+                    b.Property<int>("FingerTimeout");
+
+                    b.Property<bool>("IsBleEnabled");
+
+                    b.Property<bool>("IsCardEnabled");
+
+                    b.Property<bool>("IsDatabaseFull");
+
+                    b.Property<bool>("IsFingerEnabled");
+
+                    b.Property<bool>("IsStrictMode");
+
+                    b.Property<string>("JsonConfig");
+
+                    b.Property<string>("JsonConfigSchema");
+
+                    b.Property<int>("JsonConfigVersion");
+
+                    b.Property<string>("Port");
+
+                    b.Property<string>("SystemControllerId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SystemControllerId");
+
+                    b.ToTable("ArkDefence_Terminals");
                 });
 
             modelBuilder.Entity("Coravel.Pro.EntityFramework.CoravelJobHistory", b =>
@@ -113,7 +308,8 @@ namespace ArkDefence.AspNetCore.Host.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
-                    b.Property<string>("Id");
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
@@ -156,7 +352,8 @@ namespace ArkDefence.AspNetCore.Host.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
                 {
-                    b.Property<string>("Id");
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("AccessFailedCount");
 
@@ -226,9 +423,11 @@ namespace ArkDefence.AspNetCore.Host.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.Property<string>("LoginProvider");
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(128);
 
-                    b.Property<string>("ProviderKey");
+                    b.Property<string>("ProviderKey")
+                        .HasMaxLength(128);
 
                     b.Property<string>("ProviderDisplayName");
 
@@ -259,9 +458,11 @@ namespace ArkDefence.AspNetCore.Host.Data.Migrations
                 {
                     b.Property<string>("UserId");
 
-                    b.Property<string>("LoginProvider");
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(128);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasMaxLength(128);
 
                     b.Property<string>("Value");
 
@@ -295,55 +496,90 @@ namespace ArkDefence.AspNetCore.Host.Data.Migrations
                     b.ToTable("AutoHistory");
                 });
 
+            modelBuilder.Entity("ArkDefence.AspNetCore.Host.Models.Card", b =>
+                {
+                    b.HasOne("ArkDefence.AspNetCore.Host.Models.Person", "Person")
+                        .WithMany("Cards")
+                        .HasForeignKey("PersonId1");
+                });
+
+            modelBuilder.Entity("ArkDefence.AspNetCore.Host.Models.Person", b =>
+                {
+                    b.HasOne("ArkDefence.AspNetCore.Host.Models.Tennant", "Tennant")
+                        .WithMany("Users")
+                        .HasForeignKey("TennantId");
+                });
+
+            modelBuilder.Entity("ArkDefence.AspNetCore.Host.Models.PersonSystemController", b =>
+                {
+                    b.HasOne("ArkDefence.AspNetCore.Host.Models.Person", "Person")
+                        .WithMany("PersonSystemControllers")
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ArkDefence.AspNetCore.Host.Models.SystemController", "SystemController")
+                        .WithMany("PersonSystemControllers")
+                        .HasForeignKey("SystemControllerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ArkDefence.AspNetCore.Host.Models.SystemController", b =>
+                {
+                    b.HasOne("ArkDefence.AspNetCore.Host.Models.Tennant", "Tennant")
+                        .WithMany("SystemControllers")
+                        .HasForeignKey("TennantId");
+                });
+
+            modelBuilder.Entity("ArkDefence.AspNetCore.Host.Models.Terminal", b =>
+                {
+                    b.HasOne("ArkDefence.AspNetCore.Host.Models.SystemController", "SystemController")
+                        .WithMany("Terminals")
+                        .HasForeignKey("SystemControllerId");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

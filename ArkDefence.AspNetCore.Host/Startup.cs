@@ -26,32 +26,35 @@ using ArkDefence.AspNetCore.Host.Models.Events;
 using ArkDefence.AspNetCore.Host.Listeners;
 using Coravel.Queuing.Interfaces;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ArkDefence.AspNetCore.Host
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IWebHostEnvironment hostContext)
+        public Startup(IConfiguration configuration, Microsoft.AspNetCore.Hosting.IHostingEnvironment hostContext)
         {
             Configuration = configuration;
             _hostContext = hostContext;
         }
 
-        private readonly IWebHostEnvironment _hostContext;
+        private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostContext;
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc(options => options.EnableEndpointRouting = false)
+                    .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-            //    .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddDefaultIdentity<IdentityUser>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddControllersWithViews();
-            services.AddRazorPages();
+           // services.AddControllers();
+           // services.AddRazorPages();
             services.AddSignalR();
 
             var domain = $"https://{Configuration["Auth0:Domain"]}/";
@@ -107,11 +110,11 @@ namespace ArkDefence.AspNetCore.Host
                     #endregion
 #else
                     #region snippet_AddStackExchangeRedisCache
-                    services.AddStackExchangeRedisCache(options =>
-                    {
-                        options.Configuration = "localhost";
-                        options.InstanceName = "SampleInstance";
-                    });
+                    //services.AddStackExchangeRedisCache(options =>
+                    //{
+                    //    options.Configuration = "localhost";
+                    //    options.InstanceName = "SampleInstance";
+                    //});
                     #endregion
 #endif
                 }
@@ -125,7 +128,7 @@ namespace ArkDefence.AspNetCore.Host
             ///coravel
             services.AddEvents();
             services.AddQueue();
-            // services.AddCoravelPro(typeof(ApplicationDbContext));
+            services.AddCoravelPro(typeof(ApplicationDbContext));
 
             // Register the scope authorization handler
             services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
@@ -140,16 +143,16 @@ namespace ArkDefence.AspNetCore.Host
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime, IDistributedCache cache)
+        public void Configure(IApplicationBuilder app, Microsoft.AspNetCore.Hosting.IHostingEnvironment env, Microsoft.AspNetCore.Hosting.IApplicationLifetime lifetime, IDistributedCache cache)
         {
-            lifetime.ApplicationStarted.Register(() =>
-            {
-                var currentTimeUTC = DateTime.UtcNow.ToString();
-                byte[] encodedCurrentTimeUTC = Encoding.UTF8.GetBytes(currentTimeUTC);
-                var options = new DistributedCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromSeconds(20));
-                cache.Set("cachedTimeUTC", encodedCurrentTimeUTC, options);
-            });
+            //lifetime.ApplicationStarted.Register(() =>
+            //{
+            //    var currentTimeUTC = DateTime.UtcNow.ToString();
+            //    byte[] encodedCurrentTimeUTC = Encoding.UTF8.GetBytes(currentTimeUTC);
+            //    var options = new DistributedCacheEntryOptions()
+            //        .SetSlidingExpiration(TimeSpan.FromSeconds(20));
+            //    cache.Set("cachedTimeUTC", encodedCurrentTimeUTC, options);
+            //});
 
             //coravel
             var provider = app.ApplicationServices;
@@ -177,23 +180,31 @@ namespace ArkDefence.AspNetCore.Host
             }
 
             app.UseHttpsRedirection();
-            app.UseDefaultFiles();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseCookiePolicy();
 
-            app.UseRouting();
+            //app.UseRouting();
 
             app.UseAuthentication();
-            app.UseAuthorization();
+           // app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
+
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapControllerRoute(
+            //        name: "default",
+            //        pattern: "{controller=Home}/{action=Index}/{id?}");
+            //   // endpoints.MapRazorPages();
+            //    endpoints.MapHub<ControllerHub>("/hubs/controllerhub");
+
+            //});
+            app.UseSignalR(routes =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-               // endpoints.MapRazorPages();
-                endpoints.MapHub<ControllerHub>("/hubs/controllerhub");
+                routes.MapHub<ControllerHub>("/hubs/controllerhub");
             });
-           // app.UseCoravelPro();
+            app.UseMvc();
+            app.UseCoravelPro();
         }
     }
 

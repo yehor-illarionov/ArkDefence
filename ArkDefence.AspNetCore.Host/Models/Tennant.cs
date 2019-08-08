@@ -7,16 +7,13 @@ using System.Threading.Tasks;
 
 namespace ArkDefence.AspNetCore.Host.Models
 {
-    public class Tennant:ISoftDelete
+    public class Tennant:Entity<string>
     {
-        public Tennant(string key)
+        public Tennant(string id):base(id)
         {
-            Id = key ?? throw new ArgumentException(nameof(key));
-            CreationTime = DateTime.UtcNow;
-            SystemControllers = new List<SystemController>();
+           // SystemControllers = new List<SystemController>();
+           // Users = new List<Person>();
         }
-        [Key]
-        public string Id { get; set; }
         public string Alias { get; set; }
         [EmailAddress]
         public string Email { get; set; }
@@ -25,12 +22,6 @@ namespace ArkDefence.AspNetCore.Host.Models
         [Timestamp]
         public byte[] Timestamp { get; set; }
 
-        public DateTime CreationTime { get; set; }
-        /// <summary>
-        /// soft delete
-        /// </summary>
-        public bool Deleted { get; set; }
-        public DateTime DeletionTime { get; set; }
 
         [InverseProperty("Tennant")]
         public List<SystemController> SystemControllers { get; set; }

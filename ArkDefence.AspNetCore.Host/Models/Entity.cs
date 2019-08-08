@@ -8,12 +8,14 @@ namespace ArkDefence.AspNetCore.Host.Models
         public Entity()
         {
             CreationTime = DateTime.UtcNow;
+            Deleted = false;
         }
 
         public Entity(TKey id)
         {
             Id = id;
             CreationTime = DateTime.UtcNow;
+            Deleted = false;
         }
 
         [Key]

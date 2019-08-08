@@ -9,7 +9,8 @@ namespace ArkDefence.AspNetCore.Host.Models
     {
         public Terminal(string id):base(id)
         {
-            Id = id ?? throw new ArgumentNullException(nameof(id));
+            //Id = id ?? throw new ArgumentNullException(nameof(id));
+            this.IsDatabaseFull = false;
         }
 
         public string Alias { get; set; }

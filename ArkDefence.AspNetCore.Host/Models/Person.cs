@@ -7,26 +7,26 @@ using System.Threading.Tasks;
 
 namespace ArkDefence.AspNetCore.Host.Models
 {
-    public class Person : ISoftDelete
+    public class Person : Entity<long>
     {
-        public Person(string sub)
+        public Person(string sub):base()
         {
-            UserIdentifier = sub ?? throw new ArgumentNullException(nameof(sub));
+            this.Sub = sub;
             CreationTime = DateTime.UtcNow;
         }
 
-        [Key]
-        public long Id { get; set; }
+       // [Key]
+       // public long Id { get; set; }
         /// <summary>
         /// jwt sub property
         /// </summary>
-        public string UserIdentifier { get; set; }
+        public string Sub { get; set; }
         public string Name { get; set; }
         [Url]
         public string ImageUri { get; set; }
-        public DateTime CreationTime { get; set; }
-        public bool Deleted { get; set; }
-        public DateTime DeletionTime { get; set; }
+        //public DateTime CreationTime { get; set; }
+        //public bool Deleted { get; set; }
+       // public DateTime DeletionTime { get; set; }
 
         [Timestamp]
         public byte[] Timestamp { get; set; }
