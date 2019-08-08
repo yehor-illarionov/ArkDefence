@@ -53,10 +53,6 @@ namespace ArkDefence.AspNetCore.Host.Hubs
 
         public async Task GetUsers()
         {
-            var terminal = new Terminal();
-            terminal.SoftDelete<Terminal>(terminal);
-
-
             _queue.QueueBroadcast<MessageReceived>(new MessageReceived(Context.UserIdentifier, "GetUsers", ""));
             var temp = _dbcontext.App_MessageHistory.Last();
             temp.Method = temp.Method + ": auto hsitory test";

@@ -26,4 +26,11 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.7.12" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <None Update="aspnet-ArkDefence.AspNetCore.Host-2ACB72AB-7A67-460D-9EED-479101E6A1ED.mdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
