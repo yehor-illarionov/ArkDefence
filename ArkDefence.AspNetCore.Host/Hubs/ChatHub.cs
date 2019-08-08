@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using ArkDefence.AspNetCore.Host.Data;
+using ArkDefence.AspNetCore.Host.Models;
 using ArkDefence.AspNetCore.Host.Models.Events;
 using Coravel.Events.Interfaces;
 using Coravel.Queuing.Interfaces;
@@ -52,6 +53,10 @@ namespace ArkDefence.AspNetCore.Host.Hubs
 
         public async Task GetUsers()
         {
+            var terminal = new Terminal();
+            terminal.SoftDelete<Terminal>(terminal);
+
+
             _queue.QueueBroadcast<MessageReceived>(new MessageReceived(Context.UserIdentifier, "GetUsers", ""));
             var temp = _dbcontext.App_MessageHistory.Last();
             temp.Method = temp.Method + ": auto hsitory test";

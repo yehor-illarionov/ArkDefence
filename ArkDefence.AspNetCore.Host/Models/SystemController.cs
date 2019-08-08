@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -42,5 +43,7 @@ namespace ArkDefence.AspNetCore.Host.Models
         public Tennant Tennant { get; set; }
 
         public List<PersonSystemController> PersonSystemControllers { get; set; }
+        [InverseProperty("SystemController")]
+        public List<Terminal> Terminals { get; set; }
     }
 }
