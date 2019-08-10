@@ -24,7 +24,7 @@ namespace ArkDefence.AspNetCore.Host.Resources
         {
             var temp = new Terminal(formData["Id"] as string);
             temp.Alias = formData["Alias"] as string;
-            var controller = await _dbcontext.ArkDefence_SystemController.FindAsync(formData["ControllerId"] as string);
+            var controller = await _dbcontext.ArkDefence_SystemController.FindAsync(formData["SystemControllerId"] as string);
             if (controller != null)
             {
                 temp.SystemController = controller;
@@ -58,10 +58,10 @@ namespace ArkDefence.AspNetCore.Host.Resources
                 {
                     Text.ForProperty("Id"),
                     Text.ForProperty("Alias"),
-                    Text.ForProperty("ControllerId"),
+                    Text.ForProperty("SystemControllerId"),
                     Text.ForProperty("Port"),
                   //  Text.ForProperty("ImageUri"),
-                    Boolean.ForProperty("IsDbFull"),
+                    Boolean.ForProperty("IsDatabaseFull"),
                     Boolean.ForProperty("Deleted")
                 }),
                    
@@ -93,18 +93,20 @@ namespace ArkDefence.AspNetCore.Host.Resources
         {
             var id = formData["Id"] as string;
             var temp = await _dbcontext.ArkDefence_Terminals.FindAsync(id);
-            temp.Alias = formData["Alias"] as string;
-            var controller = await _dbcontext.ArkDefence_SystemController.FindAsync(formData["ControllerId"] as string);
-            if (controller != null)
+            if (temp == null)
             {
-                temp.SystemController = controller;
+                throw new ArgumentNullException(nameof(temp));
             }
-            else
+            temp.Alias = formData["Alias"] as string;
+            var controller = await _dbcontext.ArkDefence_SystemController.FindAsync(formData["SystemControllerId"] as string);
+            if (controller == null)
             {
                 throw new ArgumentNullException(nameof(controller));
             }
+          
+            temp.SystemController = controller;
             temp.Port = formData["Port"] as string;
-            temp.IsDatabaseFull = bool.Parse(formData["IsDbFull"].ToString());
+            temp.IsDatabaseFull = bool.Parse(formData["IsDatabaseFull"].ToString());
             temp.Deleted = bool.Parse(formData["Deleted"].ToString());
             _dbcontext.Update(temp);
             _dbcontext.EnsureAutoHistory();

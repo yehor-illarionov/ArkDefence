@@ -4,14 +4,16 @@ using ArkDefence.AspNetCore.Host.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ArkDefence.AspNetCore.Host.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190808170615_usercontrollers_index")]
+    partial class usercontrollers_index
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,11 +32,13 @@ namespace ArkDefence.AspNetCore.Host.Migrations
 
                     b.Property<DateTime>("DeletionTime");
 
-                    b.Property<long>("PersonId");
+                    b.Property<string>("PersonId");
+
+                    b.Property<long?>("PersonId1");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PersonId");
+                    b.HasIndex("PersonId1");
 
                     b.ToTable("ArkDefence_Cards");
                 });
@@ -504,8 +508,7 @@ namespace ArkDefence.AspNetCore.Host.Migrations
                 {
                     b.HasOne("ArkDefence.AspNetCore.Host.Models.Person", "Person")
                         .WithMany("Cards")
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PersonId1");
                 });
 
             modelBuilder.Entity("ArkDefence.AspNetCore.Host.Models.Person", b =>

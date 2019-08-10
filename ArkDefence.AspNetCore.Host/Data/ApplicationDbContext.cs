@@ -36,7 +36,10 @@ namespace ArkDefence.AspNetCore.Host.Data
             modelBuilder.EnableAutoHistory(changedMaxLength: null);
 
             modelBuilder.Entity<PersonSystemController>()
-                .HasKey(ps => new { ps.PersonId, ps.SystemControllerId });
+                .HasKey(ps => ps.Id);
+            modelBuilder.Entity<PersonSystemController>()
+                .HasIndex(ps => new { ps.PersonId, ps.SystemControllerId })
+                .IsUnique();
             modelBuilder.Entity<PersonSystemController>()
                 .HasOne(ps => ps.Person)
                 .WithMany(p => p.PersonSystemControllers)

@@ -6,6 +6,10 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="aspnet-ArkDefence.AspNetCore.Host-2ACB72AB-7A67-460D-9EED-479101E6A1ED_log.ldf" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Coravel" Version="2.6.0" />

@@ -34,6 +34,13 @@ namespace ArkDefence.AspNetCore.Host.Hubs
             //dbcontext.EnsureAutoHistory();
         }
 
+        public async Task GetTimeoutCurrent(string address, string port)
+        {
+            _queue.QueueBroadcast<MessageReceived>(new MessageReceived(Context.UserIdentifier, "GetTimeoutCurrent", $"user:{address}, port:{port}"));
+            await Clients.User(address).GetFingerTimeoutCurrent(port);
+        }
+
+        #region huinya
         public async Task SetFingerTimeoutUser(string user, int timeout)
         {
             _queue.QueueBroadcast<MessageReceived>(new MessageReceived (Context.UserIdentifier, "SetFingerTimeoutUser", $"user:{user}, timeout:{timeout}"));
@@ -54,14 +61,14 @@ namespace ArkDefence.AspNetCore.Host.Hubs
         public async Task GetUsers()
         {
             _queue.QueueBroadcast<MessageReceived>(new MessageReceived(Context.UserIdentifier, "GetUsers", ""));
-            var temp = _dbcontext.App_MessageHistory.Last();
-            temp.Method = temp.Method + ": auto hsitory test";
-            _dbcontext.Update(temp);
-            _dbcontext.EnsureAutoHistory();
-            await _dbcontext.SaveChangesAsync();
+          //  ..var temp = _dbcontext.App_MessageHistory.Last();
+          //temp.Method = temp.Method + ": auto hsitory test";
+          //  _dbcontext.Update(temp);
+          //  _dbcontext.EnsureAutoHistory();
+          //  await _dbcontext.SaveChangesAsync();
             await Clients.Caller.GetUsers(UserHandler.ConnectedIds);
         }
-
+        #endregion
         public override async Task OnConnectedAsync()
         {
             UserHandler.ConnectedIds.Add(Context.UserIdentifier);
@@ -77,8 +84,11 @@ namespace ArkDefence.AspNetCore.Host.Hubs
 
     public interface IControllerClient
     {
+        #region huinya
         Task SetFingerTimeout(int timeout);
         Task GetFingerTimeout();
         Task GetUsers(List<string> users);
+        #endregion
+        Task GetFingerTimeoutCurrent(string port);
     }
 }

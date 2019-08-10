@@ -27,6 +27,7 @@ using ArkDefence.AspNetCore.Host.Listeners;
 using Coravel.Queuing.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace ArkDefence.AspNetCore.Host
 {
@@ -145,6 +146,10 @@ namespace ArkDefence.AspNetCore.Host
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, Microsoft.AspNetCore.Hosting.IHostingEnvironment env, Microsoft.AspNetCore.Hosting.IApplicationLifetime lifetime, IDistributedCache cache)
         {
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
             //lifetime.ApplicationStarted.Register(() =>
             //{
             //    var currentTimeUTC = DateTime.UtcNow.ToString();
@@ -179,7 +184,7 @@ namespace ArkDefence.AspNetCore.Host
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
