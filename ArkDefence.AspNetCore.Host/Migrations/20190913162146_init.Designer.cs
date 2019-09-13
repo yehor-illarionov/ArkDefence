@@ -3,23 +3,23 @@ using System;
 using ArkDefence.AspNetCore.Host.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ArkDefence.AspNetCore.Host.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190808092227_initg")]
-    partial class initg
+    [Migration("20190913162146_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("ArkDefence.AspNetCore.Host.Models.Card", b =>
                 {
@@ -32,13 +32,11 @@ namespace ArkDefence.AspNetCore.Host.Migrations
 
                     b.Property<DateTime>("DeletionTime");
 
-                    b.Property<string>("PersonId");
-
-                    b.Property<long?>("PersonId1");
+                    b.Property<long>("PersonId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PersonId1");
+                    b.HasIndex("PersonId");
 
                     b.ToTable("ArkDefence_Cards");
                 });
@@ -46,8 +44,7 @@ namespace ArkDefence.AspNetCore.Host.Migrations
             modelBuilder.Entity("ArkDefence.AspNetCore.Host.Models.ClientUpdateQueue", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("ActionType");
 
@@ -77,8 +74,7 @@ namespace ArkDefence.AspNetCore.Host.Migrations
             modelBuilder.Entity("ArkDefence.AspNetCore.Host.Models.MessageHistory", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Data");
 
@@ -94,8 +90,7 @@ namespace ArkDefence.AspNetCore.Host.Migrations
             modelBuilder.Entity("ArkDefence.AspNetCore.Host.Models.Person", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("CreationTime");
 
@@ -124,13 +119,19 @@ namespace ArkDefence.AspNetCore.Host.Migrations
 
             modelBuilder.Entity("ArkDefence.AspNetCore.Host.Models.PersonSystemController", b =>
                 {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
                     b.Property<long>("PersonId");
 
                     b.Property<string>("SystemControllerId");
 
-                    b.HasKey("PersonId", "SystemControllerId");
+                    b.HasKey("Id");
 
                     b.HasIndex("SystemControllerId");
+
+                    b.HasIndex("PersonId", "SystemControllerId")
+                        .IsUnique();
 
                     b.ToTable("ArkDefence_PersonSystemController");
                 });
@@ -236,8 +237,7 @@ namespace ArkDefence.AspNetCore.Host.Migrations
             modelBuilder.Entity("Coravel.Pro.EntityFramework.CoravelJobHistory", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("DisplayName");
 
@@ -261,8 +261,7 @@ namespace ArkDefence.AspNetCore.Host.Migrations
             modelBuilder.Entity("Coravel.Pro.EntityFramework.CoravelScheduledJob", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<bool>("Active");
 
@@ -286,8 +285,7 @@ namespace ArkDefence.AspNetCore.Host.Migrations
             modelBuilder.Entity("Coravel.Pro.EntityFramework.CoravelScheduledJobHistory", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("DisplayName");
 
@@ -324,8 +322,7 @@ namespace ArkDefence.AspNetCore.Host.Migrations
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
+                        .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
                 });
@@ -333,8 +330,7 @@ namespace ArkDefence.AspNetCore.Host.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("ClaimType");
 
@@ -395,8 +391,7 @@ namespace ArkDefence.AspNetCore.Host.Migrations
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+                        .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -404,8 +399,7 @@ namespace ArkDefence.AspNetCore.Host.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("ClaimType");
 
@@ -474,8 +468,7 @@ namespace ArkDefence.AspNetCore.Host.Migrations
             modelBuilder.Entity("Microsoft.EntityFrameworkCore.AutoHistory", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Changed");
 
@@ -500,7 +493,8 @@ namespace ArkDefence.AspNetCore.Host.Migrations
                 {
                     b.HasOne("ArkDefence.AspNetCore.Host.Models.Person", "Person")
                         .WithMany("Cards")
-                        .HasForeignKey("PersonId1");
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("ArkDefence.AspNetCore.Host.Models.Person", b =>
@@ -519,8 +513,7 @@ namespace ArkDefence.AspNetCore.Host.Migrations
 
                     b.HasOne("ArkDefence.AspNetCore.Host.Models.SystemController", "SystemController")
                         .WithMany("PersonSystemControllers")
-                        .HasForeignKey("SystemControllerId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("SystemControllerId");
                 });
 
             modelBuilder.Entity("ArkDefence.AspNetCore.Host.Models.SystemController", b =>

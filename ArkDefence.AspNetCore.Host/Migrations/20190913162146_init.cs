@@ -1,10 +1,10 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ArkDefence.AspNetCore.Host.Migrations
 {
-    public partial class initg : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,7 +13,7 @@ namespace ArkDefence.AspNetCore.Host.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     Timestamp = table.Column<DateTime>(nullable: false),
                     Method = table.Column<string>(nullable: true),
                     Data = table.Column<string>(nullable: true)
@@ -28,7 +28,7 @@ namespace ArkDefence.AspNetCore.Host.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     IsCompleted = table.Column<bool>(nullable: false),
                     IsFailed = table.Column<bool>(nullable: false),
                     ActionType = table.Column<int>(nullable: false),
@@ -107,7 +107,7 @@ namespace ArkDefence.AspNetCore.Host.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     RowId = table.Column<string>(maxLength: 50, nullable: false),
                     TableName = table.Column<string>(maxLength: 128, nullable: false),
                     Changed = table.Column<string>(nullable: true),
@@ -124,7 +124,7 @@ namespace ArkDefence.AspNetCore.Host.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     StartedAt = table.Column<DateTime>(nullable: true),
                     EndedAt = table.Column<DateTime>(nullable: true),
                     TypeFullPath = table.Column<string>(nullable: true),
@@ -143,7 +143,7 @@ namespace ArkDefence.AspNetCore.Host.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     EndedAt = table.Column<DateTime>(nullable: true),
                     TypeFullPath = table.Column<string>(nullable: true),
                     DisplayName = table.Column<string>(nullable: true),
@@ -161,7 +161,7 @@ namespace ArkDefence.AspNetCore.Host.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     InvocableFullPath = table.Column<string>(nullable: true),
                     CronExpression = table.Column<string>(nullable: true),
                     Frequency = table.Column<string>(nullable: true),
@@ -180,12 +180,12 @@ namespace ArkDefence.AspNetCore.Host.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
-                    Alias = table.Column<string>(nullable: true),
-                    ClientSecret = table.Column<string>(nullable: true),
-                    Version = table.Column<string>(nullable: true),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     Deleted = table.Column<bool>(nullable: false),
                     DeletionTime = table.Column<DateTime>(nullable: false),
+                    Alias = table.Column<string>(nullable: true),
+                    ClientSecret = table.Column<string>(nullable: true),
+                    Version = table.Column<string>(nullable: true),
                     Timestamp = table.Column<byte[]>(rowVersion: true, nullable: true),
                     TennantId = table.Column<string>(nullable: true)
                 },
@@ -205,13 +205,13 @@ namespace ArkDefence.AspNetCore.Host.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Sub = table.Column<string>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    ImageUri = table.Column<string>(nullable: true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     Deleted = table.Column<bool>(nullable: false),
                     DeletionTime = table.Column<DateTime>(nullable: false),
+                    Sub = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    ImageUri = table.Column<string>(nullable: true),
                     Timestamp = table.Column<byte[]>(rowVersion: true, nullable: true),
                     TennantId = table.Column<string>(nullable: true)
                 },
@@ -231,7 +231,7 @@ namespace ArkDefence.AspNetCore.Host.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -252,7 +252,7 @@ namespace ArkDefence.AspNetCore.Host.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -357,7 +357,7 @@ namespace ArkDefence.AspNetCore.Host.Migrations
                 {
                     table.PrimaryKey("PK_ArkDefence_Terminals", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ArkDefence_Terminals_ArkDefence_SystemController_SystemControllerId",
+                        name: "FK_ArkDefence_Terminals_ArkDefence_SystemController_SystemCont~",
                         column: x => x.SystemControllerId,
                         principalTable: "ArkDefence_SystemController",
                         principalColumn: "Id",
@@ -372,30 +372,31 @@ namespace ArkDefence.AspNetCore.Host.Migrations
                     CreationTime = table.Column<DateTime>(nullable: false),
                     Deleted = table.Column<bool>(nullable: false),
                     DeletionTime = table.Column<DateTime>(nullable: false),
-                    PersonId = table.Column<string>(nullable: true),
-                    PersonId1 = table.Column<long>(nullable: true)
+                    PersonId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ArkDefence_Cards", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ArkDefence_Cards_ArkDefence_Users_PersonId1",
-                        column: x => x.PersonId1,
+                        name: "FK_ArkDefence_Cards_ArkDefence_Users_PersonId",
+                        column: x => x.PersonId,
                         principalTable: "ArkDefence_Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "ArkDefence_PersonSystemController",
                 columns: table => new
                 {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     PersonId = table.Column<long>(nullable: false),
-                    SystemControllerId = table.Column<string>(nullable: false)
+                    SystemControllerId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ArkDefence_PersonSystemController", x => new { x.PersonId, x.SystemControllerId });
+                    table.PrimaryKey("PK_ArkDefence_PersonSystemController", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ArkDefence_PersonSystemController_ArkDefence_Users_PersonId",
                         column: x => x.PersonId,
@@ -403,22 +404,28 @@ namespace ArkDefence.AspNetCore.Host.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ArkDefence_PersonSystemController_ArkDefence_SystemController_SystemControllerId",
+                        name: "FK_ArkDefence_PersonSystemController_ArkDefence_SystemControll~",
                         column: x => x.SystemControllerId,
                         principalTable: "ArkDefence_SystemController",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ArkDefence_Cards_PersonId1",
+                name: "IX_ArkDefence_Cards_PersonId",
                 table: "ArkDefence_Cards",
-                column: "PersonId1");
+                column: "PersonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ArkDefence_PersonSystemController_SystemControllerId",
                 table: "ArkDefence_PersonSystemController",
                 column: "SystemControllerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ArkDefence_PersonSystemController_PersonId_SystemController~",
+                table: "ArkDefence_PersonSystemController",
+                columns: new[] { "PersonId", "SystemControllerId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ArkDefence_SystemController_TennantId",
@@ -444,8 +451,7 @@ namespace ArkDefence.AspNetCore.Host.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true,
-                filter: "[NormalizedName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -471,8 +477,7 @@ namespace ArkDefence.AspNetCore.Host.Migrations
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
-                unique: true,
-                filter: "[NormalizedUserName] IS NOT NULL");
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
