@@ -1,7 +1,7 @@
 ﻿using ArkDefence.AspNetCore.Host.Data;
-using ArkDefence.AspNetCore.Host.Models;
 using Coravel.Pro.Features.Resources.Fields;
 using Coravel.Pro.Features.Resources.Interfaces;
+using Core.Domain;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

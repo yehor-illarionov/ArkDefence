@@ -1,21 +1,18 @@
-﻿using Coravel.Pro.EntityFramework;
-using Core.Domain;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Core.Domain;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace ArkDefence.AspNetCore.Host.Data
+namespace WebApplication1.Data
 {
-    public class ApplicationDbContext : IdentityDbContext, ICoravelProDbContext
+    public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
-
-        public DbSet<CoravelJobHistory> Coravel_JobHistory { get; set; }
-        public DbSet<CoravelScheduledJob> Coravel_ScheduledJobs { get; set; }
-        public DbSet<CoravelScheduledJobHistory> Coravel_ScheduledJobHistory { get; set; }
-
         public DbSet<MessageHistory> App_MessageHistory { get; set; }
 
         public DbSet<Tennant> ArkDefence_Tennant { get; set; }

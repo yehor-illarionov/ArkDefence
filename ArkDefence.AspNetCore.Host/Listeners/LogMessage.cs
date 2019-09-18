@@ -2,9 +2,8 @@
 using ArkDefence.AspNetCore.Host.Models;
 using ArkDefence.AspNetCore.Host.Models.Events;
 using Coravel.Events.Interfaces;
+using Core.Domain;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ArkDefence.AspNetCore.Host.Listeners
