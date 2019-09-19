@@ -127,9 +127,9 @@ namespace ArkDefence.AspNetCore.Host
             });
 
             ///coravel
-            services.AddEvents();
-            services.AddQueue();
-            services.AddCoravelPro(typeof(ApplicationDbContext));
+           // services.AddEvents();
+           // services.AddQueue();
+            //services.AddCoravelPro(typeof(ApplicationDbContext));
 
             // Register the scope authorization handler
             services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
@@ -140,7 +140,7 @@ namespace ArkDefence.AspNetCore.Host
             // intended for a different user!
             services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
 
-            services.AddTransient<LogMessage>();
+            //services.AddTransient<LogMessage>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -160,16 +160,16 @@ namespace ArkDefence.AspNetCore.Host
             //});
 
             //coravel
-            var provider = app.ApplicationServices;
-            provider
-            .ConfigureQueue()
-            .LogQueuedTaskProgress(provider.GetService<ILogger<IQueue>>())
-            .OnError(e =>
-            {
-                Console.WriteLine(e.ToString());
-            });
-            IEventRegistration registration = provider.ConfigureEvents();
-            registration.Register<MessageReceived>().Subscribe<LogMessage>();
+           // var provider = app.ApplicationServices;
+           // provider
+          //  .ConfigureQueue()
+           // .LogQueuedTaskProgress(provider.GetService<ILogger<IQueue>>())
+          //  .OnError(e =>
+          //  {
+          //      Console.WriteLine(e.ToString());
+          //  });
+          //  IEventRegistration registration = provider.ConfigureEvents();
+          //  registration.Register<MessageReceived>().Subscribe<LogMessage>();
             //
 
             if (env.IsDevelopment())
@@ -209,7 +209,7 @@ namespace ArkDefence.AspNetCore.Host
                 routes.MapHub<ControllerHub>("/hubs/controllerhub");
             });
             app.UseMvc();
-            app.UseCoravelPro();
+          //  app.UseCoravelPro();
         }
     }
 

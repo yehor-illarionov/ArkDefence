@@ -24,43 +24,43 @@ namespace ArkDefence.AspNetCore.Host.Hubs
     public class ControllerHub : Hub<IControllerClient>
     {
         //private IDispatcher coravel_dispathcer;
-        private readonly IQueue _queue;
+      //  private readonly IQueue _queue;
         private readonly ApplicationDbContext _dbcontext;
 
-        public ControllerHub(IQueue queue, ApplicationDbContext dbcontext)
+        public ControllerHub( ApplicationDbContext dbcontext)
         {
-            _queue = queue ?? throw new ArgumentNullException(nameof(queue));
+           // _queue = queue ?? throw new ArgumentNullException(nameof(queue));
             _dbcontext = dbcontext ?? throw new ArgumentNullException(nameof(dbcontext));
             //dbcontext.EnsureAutoHistory();
         }
 
         public async Task GetTimeoutCurrent(string address, string port)
         {
-            _queue.QueueBroadcast<MessageReceived>(new MessageReceived(Context.UserIdentifier, "GetTimeoutCurrent", $"user:{address}, port:{port}"));
+          //  _queue.QueueBroadcast<MessageReceived>(new MessageReceived(Context.UserIdentifier, "GetTimeoutCurrent", $"user:{address}, port:{port}"));
             await Clients.User(address).GetFingerTimeoutCurrent(port);
         }
 
         #region huinya
         public async Task SetFingerTimeoutUser(string user, int timeout)
         {
-            _queue.QueueBroadcast<MessageReceived>(new MessageReceived (Context.UserIdentifier, "SetFingerTimeoutUser", $"user:{user}, timeout:{timeout}"));
+          //  _queue.QueueBroadcast<MessageReceived>(new MessageReceived (Context.UserIdentifier, "SetFingerTimeoutUser", $"user:{user}, timeout:{timeout}"));
             await Clients.Client(user).SetFingerTimeout(timeout);
         }
         public async Task SetFingerTimeout(int timeout)
         {
-            _queue.QueueBroadcast<MessageReceived>(new MessageReceived(Context.UserIdentifier, "SetFingerTimeout", $"timeout:{timeout}"));
+         //   _queue.QueueBroadcast<MessageReceived>(new MessageReceived(Context.UserIdentifier, "SetFingerTimeout", $"timeout:{timeout}"));
             await Clients.All.SetFingerTimeout(timeout);
         }
 
         public async Task GetFingerTimeout(string userid)
         {
-            _queue.QueueBroadcast<MessageReceived>(new MessageReceived(Context.UserIdentifier, "GetFingerTimeout", $"userid:{userid}"));
+          //  _queue.QueueBroadcast<MessageReceived>(new MessageReceived(Context.UserIdentifier, "GetFingerTimeout", $"userid:{userid}"));
             await Clients.User(userid).GetFingerTimeout();
         }
 
         public async Task GetUsers()
         {
-            _queue.QueueBroadcast<MessageReceived>(new MessageReceived(Context.UserIdentifier, "GetUsers", ""));
+          //  _queue.QueueBroadcast<MessageReceived>(new MessageReceived(Context.UserIdentifier, "GetUsers", ""));
           //  ..var temp = _dbcontext.App_MessageHistory.Last();
           //temp.Method = temp.Method + ": auto hsitory test";
           //  _dbcontext.Update(temp);
