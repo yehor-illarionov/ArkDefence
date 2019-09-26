@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Core.Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApplication1.Data;
+
 
 namespace WebApplication1.Hubs
 {
@@ -29,6 +31,11 @@ namespace WebApplication1.Hubs
         {
            // _queue.QueueBroadcast<MessageReceived>(new MessageReceived(Context.UserIdentifier, "GetTimeoutCurrent", $"user:{address}, port:{port}"));
             await Clients.User(address).GetFingerTimeoutCurrent(port);
+        }
+
+        public async Task AddFingerTo(string address, int uid, int privilage)
+        {
+            await Clients.User(address).AddFinger(uid, privilage);
         }
 
         #region huinya
@@ -81,5 +88,6 @@ namespace WebApplication1.Hubs
         Task GetUsers(List<string> users);
         #endregion
         Task GetFingerTimeoutCurrent(string port);
+        Task AddFinger(int uid, int privilage);
     }
 }

@@ -21,7 +21,7 @@ namespace TestClient
         private const string Audience = "https://localhost:5001";
         private const string Secret = "idcNqrPsARQFI5qeEKOn57SwsloVN-ln1bo-R7aTo_ZTWtnEv2BGAkbuTvm7hq8J";
         private const string ClientId = "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI";
-        private const string ConnectionUri = "https://335004ff.ngrok.io/hubs/controllerhub";
+        private const string ConnectionUri = "https://localhost:5001/hubs/controllerhub";
 
         private string token=null;
         private SecurityToken validatedToken=null;

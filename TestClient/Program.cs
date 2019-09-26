@@ -44,9 +44,10 @@ namespace TestClient
             await client.StartAsync(cancelTokenSource.Token);
             await client.Connection.InvokeAsync("GetUsers");
             await client.Connection.InvokeAsync("SetFingerTimeout", 3000);
-            await client.Connection.InvokeAsync("GetTimeoutCurrent", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients", "/dev/ttyS1");
+           await client.Connection.InvokeAsync("GetTimeoutCurrent", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients", "/dev/ttyS1");
+            await client.Connection.InvokeAsync("AddFingerTo", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients", 10,1);
 
-            Console.WriteLine("Hello World!");
+         //   Console.WriteLine("Hello World!");
             Console.ReadLine();
             cancelTokenSource.Cancel();
         }
