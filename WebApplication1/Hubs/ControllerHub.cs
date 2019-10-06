@@ -38,23 +38,44 @@ namespace WebApplication1.Hubs
             await Clients.User(address).AddFinger(uid, privilage);
         }
 
-        #region huinya
-        public async Task SetFingerTimeoutUser(string user, int timeout)
+        public async Task SendConfigTo(string address, string json)
         {
-          //  _queue.QueueBroadcast<MessageReceived>(new MessageReceived(Context.UserIdentifier, "SetFingerTimeoutUser", $"user:{user}, timeout:{timeout}"));
-            await Clients.Client(user).SetFingerTimeout(timeout);
-        }
-        public async Task SetFingerTimeout(int timeout)
-        {
-          //  _queue.QueueBroadcast<MessageReceived>(new MessageReceived(Context.UserIdentifier, "SetFingerTimeout", $"timeout:{timeout}"));
-            await Clients.All.SetFingerTimeout(timeout);
+            await Clients.User(address).SendConfig(json);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="address">autho0 client id</param>
+        /// <param name="timeout">0<x<255</param>
+        /// <param name="port">linux system port e.g. /dev/ttyS0</param>
+        /// <returns></returns>
+        public async Task SetFingerTimeoutTo(string address, int timeout, string port)
+        {
+            await Clients.User(address).SetFingerTimeout(timeout, port);
+        }
+
+        public async Task DeleteFingerByIdTo(string address, int id, string port)
+        {
+            await Clients.User(address).DeleteFingerById(id, port);
+        }
+
+        public async Task DeleteAllFingerprintsTo(string address, string port)
+        {
+            await Clients.User(address).DeleteAllFingerprints(port);
+        }
+
+        public async Task AddFingerByBleTo(string address, string userid, string ble, int id, int privilage, string port)
+        {
+            await Clients.User(address).AddFingerByBle(userid, ble, id, privilage, port);
+        }
         public async Task GetFingerTimeout(string userid)
         {
-          //  _queue.QueueBroadcast<MessageReceived>(new MessageReceived(Context.UserIdentifier, "GetFingerTimeout", $"userid:{userid}"));
+            //  _queue.QueueBroadcast<MessageReceived>(new MessageReceived(Context.UserIdentifier, "GetFingerTimeout", $"userid:{userid}"));
             await Clients.User(userid).GetFingerTimeout();
         }
+
+        #region huinya
 
         public async Task GetUsers()
         {
@@ -83,11 +104,15 @@ namespace WebApplication1.Hubs
     public interface IControllerClient
     {
         #region huinya
-        Task SetFingerTimeout(int timeout);
         Task GetFingerTimeout();
         Task GetUsers(List<string> users);
         #endregion
+        Task SetFingerTimeout(int timeout, string port);
         Task GetFingerTimeoutCurrent(string port);
         Task AddFinger(int uid, int privilage);
+        Task SendConfig(string json);
+        Task DeleteAllFingerprints(string port);
+        Task DeleteFingerById(int id, string port);
+        Task AddFingerByBle(string userid, string ble, int id, int privilage, string port);
     }
 }
