@@ -1,4 +1,5 @@
 ﻿using Core.Domain;
+using Finbuckle.MultiTenant.Stores;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

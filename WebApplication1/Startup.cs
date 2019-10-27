@@ -40,11 +40,23 @@ namespace WebApplication1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllersWithViews();
+
+            services.AddDbContext<TenantDbContext>(options =>
+              options.UseNpgsql(
+                   Configuration.GetConnectionString("TenantConnection")));
+
+            services.AddMultiTenant()
+                .WithEFCoreStore<TenantDbContext, AppTenantInfo>()
+                .WithRouteStrategy();
+
+            services.AddDbContext<NextAppContext>();
+
+            //   services.AddDbContext<ApplicationDbContext>(options =>
+            //     options.UseNpgsql(
+            //          Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddSignalR();
-            services.AddDbContext<ApplicationDbContext>(options =>
-               options.UseNpgsql(
-                   Configuration.GetConnectionString("DefaultConnection")));
 
             var domain = $"https://{Configuration["Auth0:Domain"]}/";
             services.AddAuthentication(options =>
@@ -89,7 +101,6 @@ namespace WebApplication1
             // intended for a different user!
             services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
             services.AddTransient<TennantRepository>();
-            //return new AutofacServiceProvider(Container);
         }
 
         // ConfigureContainer is where you can register things directly
@@ -103,7 +114,6 @@ namespace WebApplication1
             var busBuilder = new BusBuilder()
               .RegisterHandlers(Assembly.GetEntryAssembly());
             builder.RegisterMicroBus(busBuilder);
-           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -119,14 +129,20 @@ namespace WebApplication1
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
        
-            app.UseAuthentication();
+         
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseRouting();
+            app.UseMultiTenant();
+            app.UseAuthentication();
             app.UseAuthorization();
+
+    
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute("host", "{controller=Home}/{action=Index}");
+                endpoints.MapControllerRoute("default", "{__tenant__}/{controller=Home}/{action=Index}");
                 endpoints.MapHub<ControllerHub>("hubs/controllerhub");
             });
 

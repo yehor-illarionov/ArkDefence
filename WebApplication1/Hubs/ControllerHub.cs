@@ -1,4 +1,5 @@
 ﻿using Core.Domain;
+using Finbuckle.MultiTenant;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System;
@@ -19,9 +20,9 @@ namespace WebApplication1.Hubs
     public class ControllerHub : Hub<IControllerClient>
     {
         //private IDispatcher coravel_dispathcer;
-        private readonly ApplicationDbContext _dbcontext;
+        private readonly IMultiTenantStore _dbcontext;
 
-        public ControllerHub(ApplicationDbContext dbcontext)
+        public ControllerHub(IMultiTenantStore dbcontext)
         {
             _dbcontext = dbcontext ?? throw new ArgumentNullException(nameof(dbcontext));
             //dbcontext.EnsureAutoHistory();
@@ -29,18 +30,18 @@ namespace WebApplication1.Hubs
 
         public async Task GetTimeoutCurrent(string address, string port)
         {
-           // _queue.QueueBroadcast<MessageReceived>(new MessageReceived(Context.UserIdentifier, "GetTimeoutCurrent", $"user:{address}, port:{port}"));
-            await Clients.User(address).GetFingerTimeoutCurrent(port);
+            // _queue.QueueBroadcast<MessageReceived>(new MessageReceived(Context.UserIdentifier, "GetTimeoutCurrent", $"user:{address}, port:{port}"));
+            await Clients.User(address).GetFingerTimeoutCurrent(new GetFingerTimeoutReq { Port=port });
         }
 
-        public async Task AddFingerTo(string address, int uid, int privilage)
+        public async Task AddFingerTo(string address, int uid, int privilage, string port)
         {
-            await Clients.User(address).AddFinger(uid, privilage);
+            await Clients.User(address).AddFinger(new AddFingerReq { Port=port, Privilage=privilage, Uid=uid});
         }
 
-        public async Task SendConfigTo(string address, string json)
+        public async Task SendConfigTo(string address, string json, string port)
         {
-            await Clients.User(address).SendConfig(json);
+            await Clients.User(address).SendConfig(new SendConfigReq {  JsonString=json, Port=port});
         }
 
         /// <summary>
@@ -52,34 +53,34 @@ namespace WebApplication1.Hubs
         /// <returns></returns>
         public async Task SetFingerTimeoutTo(string address, int timeout, string port)
         {
-            await Clients.User(address).SetFingerTimeout(timeout, port);
+            await Clients.User(address).SetFingerTimeout(new SetFingerTimeoutReq { Timeout = timeout, Port = port });
         }
 
         public async Task DeleteFingerByIdTo(string address, int id, string port)
         {
-            await Clients.User(address).DeleteFingerById(id, port);
+            await Clients.User(address).DeleteFingerById(new DeleteFingerByIdReq { Id=id,Port=port});
         }
 
         public async Task DeleteAllFingerprintsTo(string address, string port)
         {
-            await Clients.User(address).DeleteAllFingerprints(port);
+            await Clients.User(address).DeleteAllFingerprints(new DeleteAllFingerprintsReq { Port=port});
         }
 
         public async Task AddFingerByBleTo(string address, string userid, string ble, int id, int privilage, string port)
         {
-            await Clients.User(address).AddFingerByBle(userid, ble, id, privilage, port);
+            await Clients.User(address).AddFingerByBle(new AddFingerByBleReq { UserId=userid, Ble=ble, Id=id, Port=port, Privilage=privilage});
         }
-        public async Task GetFingerTimeout(string userid)
+        public async Task GetFingerTimeout(string address)
         {
             //  _queue.QueueBroadcast<MessageReceived>(new MessageReceived(Context.UserIdentifier, "GetFingerTimeout", $"userid:{userid}"));
-            await Clients.User(userid).GetFingerTimeout();
+            await Clients.User(address).GetFingerTimeout();
         }
 
         #region huinya
 
         public async Task GetUsers()
         {
-          //  _queue.QueueBroadcast<MessageReceived>(new MessageReceived(Context.UserIdentifier, "GetUsers", ""));
+            //  _queue.QueueBroadcast<MessageReceived>(new MessageReceived(Context.UserIdentifier, "GetUsers", ""));
             //  ..var temp = _dbcontext.App_MessageHistory.Last();
             //temp.Method = temp.Method + ": auto hsitory test";
             //  _dbcontext.Update(temp);
@@ -107,12 +108,60 @@ namespace WebApplication1.Hubs
         Task GetFingerTimeout();
         Task GetUsers(List<string> users);
         #endregion
-        Task SetFingerTimeout(int timeout, string port);
-        Task GetFingerTimeoutCurrent(string port);
-        Task AddFinger(int uid, int privilage);
-        Task SendConfig(string json);
-        Task DeleteAllFingerprints(string port);
-        Task DeleteFingerById(int id, string port);
-        Task AddFingerByBle(string userid, string ble, int id, int privilage, string port);
+
+        Task SetFingerTimeout(SetFingerTimeoutReq req);
+        Task GetFingerTimeoutCurrent(GetFingerTimeoutReq req);
+        Task AddFinger(AddFingerReq req);
+        Task SendConfig(SendConfigReq req);
+        Task DeleteAllFingerprints(DeleteAllFingerprintsReq req);
+        Task DeleteFingerById(DeleteFingerByIdReq req);
+        Task AddFingerByBle(AddFingerByBleReq req);
     }
+
+    #region client requests
+    public class SetFingerTimeoutReq
+    {
+        public int Timeout { get; set; }
+        public string Port { get; set; }
+    }
+
+    public class GetFingerTimeoutReq
+    {
+        public string Port { get; set; }
+    }
+
+    public class AddFingerReq
+    {
+        public int Uid { get; set; }
+        public int Privilage { get; set; }
+        public string Port { get; set; }
+    }
+
+    public  class SendConfigReq
+    {
+        public string JsonString { get; set; }
+        public string Port { get; set; }
+    }
+
+    public class DeleteAllFingerprintsReq
+    {
+        public string Port { get; set; }
+    }
+
+    public class DeleteFingerByIdReq 
+    {
+        public int Id { get; set; }
+        public string Port { get; set; }
+    }
+
+    public class AddFingerByBleReq
+    {
+        public string UserId { get; set; }
+        public string Ble { get; set; }
+        public int Id { get; set; }
+        public int Privilage { get; set; }
+        public string Port { get; set; }
+    }
+
+    #endregion
 }
