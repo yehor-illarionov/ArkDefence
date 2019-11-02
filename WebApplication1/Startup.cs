@@ -9,6 +9,9 @@ using Enexure.MicroBus.Autofac;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -40,15 +43,15 @@ namespace WebApplication1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
-
+            services.AddMvc().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            //services.AddControllersWithViews().AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
             services.AddDbContext<TenantDbContext>(options =>
               options.UseNpgsql(
                    Configuration.GetConnectionString("TenantConnection")));
 
             services.AddMultiTenant()
                 .WithEFCoreStore<TenantDbContext, AppTenantInfo>()
-                .WithRouteStrategy();
+                .WithRouteStrategy().WithFallbackStrategy("host");
 
             services.AddDbContext<NextAppContext>();
 
@@ -100,7 +103,19 @@ namespace WebApplication1
             // If the Name claim isn't unique, users could receive messages 
             // intended for a different user!
             services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
-            services.AddTransient<TennantRepository>();
+            // services.AddTransient<TennantRepository>();
+            services.AddTransient<ControllerRepository>();
+            services.AddTransient<TerminalRepository>();
+
+            services.AddDbContext<KeysContext>(options =>
+             options.UseNpgsql(
+                  Configuration.GetConnectionString("KeysConnection")));
+            services.AddDataProtection()
+                .UseCryptographicAlgorithms(new AuthenticatedEncryptorConfiguration() 
+                {
+                    EncryptionAlgorithm= EncryptionAlgorithm.AES_256_CBC,
+                    ValidationAlgorithm= ValidationAlgorithm.HMACSHA256
+                }).PersistKeysToDbContext<KeysContext>();
         }
 
         // ConfigureContainer is where you can register things directly

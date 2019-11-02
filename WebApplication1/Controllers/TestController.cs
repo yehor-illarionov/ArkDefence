@@ -6,6 +6,7 @@ using Finbuckle.MultiTenant;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Data;
+using WebApplication1.Data.App;
 
 namespace WebApplication1.Controllers
 {
@@ -14,16 +15,20 @@ namespace WebApplication1.Controllers
     public class TestController : ControllerBase
     {
         private readonly IMultiTenantStore context;
+        private readonly ControllerRepository crepo;
+        private readonly TerminalRepository trepo;
 
-        public TestController(IMultiTenantStore context)
+        public TestController(IMultiTenantStore context, ControllerRepository crepo, TerminalRepository trepo)
         {
             this.context = context;
+            this.crepo = crepo;
+            this.trepo = trepo;
         }
 
 
         // GET: api/Test
         [HttpGet]
-        public async IAsyncEnumerable<string> Get()
+        public async Task<IEnumerable<ResController>> Get()
         {
             //var temp = new List<TenantInfo>();
             //temp.Add(new TenantInfo("tenant-egorliberty", "egor", "Egor", "Server=127.0.0.1;Port=5432;Database=arkdefence_eg;User Id=postgres;Password=BmHkYi5436!;", null));
@@ -33,7 +38,14 @@ namespace WebApplication1.Controllers
             //    context.TryAddAsync(item).Wait();
             //    yield return new string("tenant added");
             //}
-            yield return new string("tenants ok");
+
+            //var sbc = new ResController("test", "testid", "testsecret");
+            //  repo.AddController(sbc);
+          //  var terminal = new Terminal() { Alias="some_terminal", Deleted=false, GpioPort=1, Port="/dev/ttyS1"};
+           // trepo.Add(terminal);
+            await crepo.AddTerminalAsync(1, 1);
+            return await crepo.GetAllAsync();
+           
         }
 
 

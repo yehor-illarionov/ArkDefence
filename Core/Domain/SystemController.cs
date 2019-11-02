@@ -43,7 +43,7 @@ namespace Core.Domain
         public Tennant Tennant { get; set; }
 
         public List<PersonSystemController> PersonSystemControllers { get; set; }
-        [InverseProperty("SystemController")]
-        public List<Terminal> Terminals { get; set; }
+      //  [InverseProperty("SystemController")]
+      //  public List<Terminal> Terminals { get; set; }
     }
 }

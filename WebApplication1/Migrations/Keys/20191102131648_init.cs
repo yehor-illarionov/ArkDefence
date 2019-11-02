@@ -1,34 +1,31 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace WebApplication1.Migrations.NextApp
+namespace WebApplication1.Migrations.Keys
 {
     public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Controllers",
+                name: "DataProtectionKeys",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CreationTime = table.Column<DateTime>(nullable: false),
-                    Deleted = table.Column<bool>(nullable: false),
-                    DeletionTime = table.Column<DateTime>(nullable: false),
-                    Alias = table.Column<string>(nullable: true)
+                    FriendlyName = table.Column<string>(nullable: true),
+                    Xml = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Controllers", x => x.Id);
+                    table.PrimaryKey("PK_DataProtectionKeys", x => x.Id);
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Controllers");
+                name: "DataProtectionKeys");
         }
     }
 }

@@ -23,7 +23,7 @@ namespace ArkDefence.AspNetCore.Host.Data
         public DbSet<Person> ArkDefence_Users { get; set; }
         public DbSet<PersonSystemController> ArkDefence_PersonSystemController { get; set; }
         public DbSet<Card> ArkDefence_Cards { get; set; }
-        public DbSet<Terminal> ArkDefence_Terminals { get; set; }
+       // public DbSet<Terminal> ArkDefence_Terminals { get; set; }
         public DbSet<ClientUpdateQueue> ArkDefence_ClientUpdateQueue { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
