@@ -24,6 +24,12 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using WebApplication1.Data;
 using WebApplication1.Hubs;
+using Microsoft.OpenApi.Models;
+using System.IO;
+using WebApplication1.Exceptions;
+using System.Net;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 
 namespace WebApplication1
 {
@@ -43,7 +49,11 @@ namespace WebApplication1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.AddMvc(options=>
+            {
+                options.Filters.Add(new HttpResponseExceptionFilter());
+
+            }).AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             //services.AddControllersWithViews().AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
             services.AddDbContext<TenantDbContext>(options =>
               options.UseNpgsql(
@@ -59,6 +69,18 @@ namespace WebApplication1
             //     options.UseNpgsql(
             //          Configuration.GetConnectionString("DefaultConnection")));
 
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { 
+                    Title = "My API", Version = "v1" 
+                });
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
+            
             services.AddSignalR();
 
             var domain = $"https://{Configuration["Auth0:Domain"]}/";
@@ -104,7 +126,7 @@ namespace WebApplication1
             // intended for a different user!
             services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
             // services.AddTransient<TennantRepository>();
-            services.AddTransient<ControllerRepository>();
+            services.AddTransient<SystemControllerRepository>();
             services.AddTransient<TerminalRepository>();
 
             services.AddDbContext<KeysContext>(options =>
@@ -136,8 +158,10 @@ namespace WebApplication1
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+               
+               // app.UseExceptionHandler("/error");
             }
+            app.UseExceptionHandler("/error");
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
@@ -147,6 +171,20 @@ namespace WebApplication1
          
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                
+            });
+
+
             app.UseRouting();
             app.UseMultiTenant();
             app.UseAuthentication();
@@ -156,9 +194,11 @@ namespace WebApplication1
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapControllerRoute("host", "{controller=Home}/{action=Index}");
                 endpoints.MapControllerRoute("default", "{__tenant__}/{controller=Home}/{action=Index}");
                 endpoints.MapHub<ControllerHub>("hubs/controllerhub");
+
             });
 
             applicationLifetime.ApplicationStopped.Register(() =>

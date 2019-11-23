@@ -18,7 +18,7 @@ namespace TestClient
 
             client.Connection.On<dynamic>("SetFingerTimeout", req =>
             {
-                Console.WriteLine($"Set timeout from server:{req.Timeout}");
+              //  Console.WriteLine($"Set timeout from server:{req.Timeout}");
             });
             client.Connection.On<GetConfigRes>("ReceiveConfig", res =>
             {
@@ -37,16 +37,28 @@ namespace TestClient
             CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
             await client.StartAsync(cancelTokenSource.Token);
             // await client.Connection.InvokeAsync("GetUsers");
-               await client.Connection.InvokeAsync("SetFingerTimeoutTo", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients", 10, "/dev/ttyS1");
+            //  await client.Connection.InvokeAsync("SetFingerTimeoutTo", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients", 5, "/dev/ttyS1");
+            //await Task.Delay(2000);
             //  await client.Connection.InvokeAsync("SetFingerTimeoutTo", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients", 5, "/dev/ttyS2");
-               await client.Connection.InvokeAsync("GetTimeoutCurrent", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients", "/dev/ttyS1");
-           // await client.Connection.InvokeAsync("GetTimeoutCurrent", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients", "/dev/ttyS1");
-                await client.Connection.InvokeAsync("AddFingerTo", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients", 1, 1, "/dev/ttyS1");
-                await client.Connection.InvokeAsync("SendConfigTo", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients", "{\"Name\":\"New\",\"mode\":1,\"delay\":5,\"BLE_State\":1}", "/dev/ttyS1");
-                await client.Connection.InvokeAsync("DeleteFingerByIdTo", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients", 1, "/dev/ttyS1");
-                await client.Connection.InvokeAsync("AddFingerByBleTo", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients",
-                      "some_user", "1BFF1801BEAC2F234454CF6D4A0FADF2F4911BA9FFA600010002BF00", 1, 1, "/dev/ttyS1");
-            //       await client.Connection.InvokeAsync("DeleteAllFingerprintsTo", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients", "/dev/ttyS1");
+            //  await client.Connection.InvokeAsync("GetTimeoutCurrent", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients", "/dev/ttyS1");
+            // await client.Connection.InvokeAsync("GetTimeoutCurrent", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients", "/dev/ttyS1");
+            //await Task.Delay(2000);
+            // await client.Connection.InvokeAsync("GetTimeoutCurrent", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients", "/dev/ttyS1");
+            // await client.Connection.InvokeAsync("GetTimeoutCurrent", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients", "/dev/ttyS1");
+           // await client.Connection.InvokeAsync("DeleteFingerByIdTo", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients", 1, "/dev/ttyS1");
+            //await Task.Delay(2000);
+           // await client.Connection.InvokeAsync("AddFingerTo", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients", 1, 1, "/dev/ttyS1");
+           // await Task.Delay(2000);
+           // await client.Connection.InvokeAsync("DeleteAllFingerprintsTo", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients", "/dev/ttyS1");
+           // await Task.Delay(2000);
+           // await client.Connection.InvokeAsync("AddFingerTo", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients", 1, 1, "/dev/ttyS1");
+           // await Task.Delay(2000);
+           // await client.Connection.InvokeAsync("SendConfigTo", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients", "{\"Name\":\"New\",\"mode\":1,\"delay\":5,\"BLE_State\":1}", "/dev/ttyS1");
+            //  await client.Connection.InvokeAsync("DeleteFingerByIdTo", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients", 1, "/dev/ttyS1");
+            //await client.Connection.InvokeAsync("DeleteAllFingerprintsTo", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients", "/dev/ttyS1");
+            //  await client.Connection.InvokeAsync("AddFingerByBleTo", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients",
+            //           "some_user", "1BFF1801BEAC2F234454CF6D4A0FADF2F4911BA9FFA600010002BF00", 1, 1, "/dev/ttyS1");
+           // await Task.Delay(2000);
             await client.Connection.InvokeAsync("GetConfigFrom", "DYaPShg0nOEptG3AIeDgNBCudk7w3LhI@clients", "/dev/ttyS1");
             Console.ReadLine();
             cancelTokenSource.Cancel();

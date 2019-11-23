@@ -18,7 +18,6 @@ namespace Core.Domain
         {
             Alias = alias;
         }
-
         public string Alias { get; set; }
         public string ClientIdHash { get; set; }
         public string ClientSecretHash { get; set; }

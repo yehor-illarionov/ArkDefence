@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Core.Domain;
 using Finbuckle.MultiTenant;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Data;
+using WebApplication1.Exceptions;
 
 namespace WebApplication1.Controllers
 {
@@ -14,23 +16,20 @@ namespace WebApplication1.Controllers
     [ApiController]
     public class ControllerController : ControllerBase
     {
-        private NextAppContext context;
+        private readonly IDataProtectionProvider provider;
 
-        public ControllerController(NextAppContext context)
+        public ControllerController(IDataProtectionProvider provider)
         {
-            this.context = context;
+            this.provider = provider;
         }
 
         // GET: api/Controller
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IEnumerable<ResController>> Get()
         {
-            //context.Add(new SbcController("some1"));
-            var temp = context.Controllers.Find((long)1);
-            temp.SoftDelete();
-            context.Update(temp);
-            context.SaveChanges();
-            return new string[] { "value1", "value2" };
+            var tenantInfo = HttpContext.GetMultiTenantContext().TenantInfo;
+            var repo = new SystemControllerRepository(tenantInfo, provider);
+            return await repo.GetAllAsync();
         }
 
         // GET: api/Controller/5
@@ -42,9 +41,15 @@ namespace WebApplication1.Controllers
 
         // POST: api/Controller
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] CreateControllerDto value)
         {
-
+            var tenantInfo = HttpContext.GetMultiTenantContext().TenantInfo;
+            var repo = new SystemControllerRepository(tenantInfo, provider);
+            bool res=await repo.AddController(value);
+            if (!res)
+            {
+                throw new HttpResponseException() { Status=403};
+            }return Ok();
         }
 
         // PUT: api/Controller/5
