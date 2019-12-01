@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.Data
 {
-    public class TenantDbContext : EFCoreStoreDbContext<AppTenantInfo>
+    public class TenantDbContext : EFCoreStoreDbContext<Tenant>
     {
         public TenantDbContext(DbContextOptions<TenantDbContext> options) : base(options)
         {

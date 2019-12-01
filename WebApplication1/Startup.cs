@@ -30,6 +30,8 @@ using WebApplication1.Exceptions;
 using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using Boxed.AspNetCore.Swagger;
+using Boxed.AspNetCore.Swagger.OperationFilters;
 
 namespace WebApplication1
 {
@@ -60,25 +62,40 @@ namespace WebApplication1
                    Configuration.GetConnectionString("TenantConnection")));
 
             services.AddMultiTenant()
-                .WithEFCoreStore<TenantDbContext, AppTenantInfo>()
+                .WithEFCoreStore<TenantDbContext, Tenant>()
                 .WithRouteStrategy().WithFallbackStrategy("host");
 
             services.AddDbContext<NextAppContext>();
+        
 
             //   services.AddDbContext<ApplicationDbContext>(options =>
             //     options.UseNpgsql(
             //          Configuration.GetConnectionString("DefaultConnection")));
 
             // Register the Swagger generator, defining 1 or more Swagger documents
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { 
-                    Title = "My API", Version = "v1" 
-                });
-                // Set the comments path for the Swagger JSON and UI.
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
+                var assembly = typeof(Startup).Assembly;
+                //var assemblyProduct = assembly.GetCustomAttribute<AssemblyProductAttribute>().Product;
+               // var assemblyDescription = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
+
+                options.DescribeAllParametersInCamelCase();
+                options.EnableAnnotations();
+
+                    // Add the XML comment file for this assembly, so its contents can be displayed.
+                options.IncludeXmlCommentsIfExists(assembly);
+                options.OperationFilter<CorrelationIdOperationFilter>();
+                options.OperationFilter<ClaimsOperationFilter>();
+                options.OperationFilter<ForbiddenResponseOperationFilter>();
+                options.OperationFilter<UnauthorizedResponseOperationFilter>();
+                var info = new OpenApiInfo()
+                    {
+                        Title = "test",
+                        Description = "test",
+                        Version = "v1"
+                    };
+                options.SwaggerDoc("v1", info);
+    
             });
             
             services.AddSignalR();
@@ -137,7 +154,12 @@ namespace WebApplication1
                 {
                     EncryptionAlgorithm= EncryptionAlgorithm.AES_256_CBC,
                     ValidationAlgorithm= ValidationAlgorithm.HMACSHA256
-                }).PersistKeysToDbContext<KeysContext>();
+                })
+                .SetApplicationName("akrdefence_system_backend")
+                .PersistKeysToDbContext<KeysContext>();
+
+            services.AddProjectCommands();
+            services.AddProjectRepositories();
         }
 
         // ConfigureContainer is where you can register things directly

@@ -2,7 +2,7 @@
 
 namespace WebApplication1.Data
 {
-    public class AppTenantInfo : IEFCoreStoreTenantInfo
+    public class Tenant : IEFCoreStoreTenantInfo
     {
         public string Id { get; set; }
         public string Identifier { get; set; }
