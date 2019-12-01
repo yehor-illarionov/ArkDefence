@@ -16,6 +16,7 @@
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="5.0.1" />
     <PackageReference Include="Boxed.AspNetCore" Version="5.0.0" />
     <PackageReference Include="Boxed.AspNetCore.Swagger" Version="6.0.0" />
+    <PackageReference Include="Boxed.Mapping" Version="3.0.0" />
     <PackageReference Include="Enexure.MicroBus.Autofac" Version="3.6.0" />
     <PackageReference Include="Finbuckle.MultiTenant" Version="4.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.0.0" />

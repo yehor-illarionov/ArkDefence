@@ -1,4 +1,5 @@
 ﻿using Finbuckle.MultiTenant.Stores;
+using System;
 
 namespace WebApplication1.Data
 {
@@ -10,5 +11,6 @@ namespace WebApplication1.Data
         public string Email { get; set; }
         public string Phone { get; set; }
         public string ConnectionString { get; set; }
+        public DateTimeOffset Modified { get; set; }
     }
 }

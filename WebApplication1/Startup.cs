@@ -32,6 +32,9 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Boxed.AspNetCore.Swagger;
 using Boxed.AspNetCore.Swagger.OperationFilters;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Boxed.AspNetCore.Swagger.SchemaFilters;
 
 namespace WebApplication1
 {
@@ -56,6 +59,14 @@ namespace WebApplication1
                 options.Filters.Add(new HttpResponseExceptionFilter());
 
             }).AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            services.AddRouting(
+                options =>
+                {
+                    // All generated URL's should be lower-case.
+                    options.LowercaseUrls = true;
+                });
+
             //services.AddControllersWithViews().AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
             services.AddDbContext<TenantDbContext>(options =>
               options.UseNpgsql(
@@ -88,6 +99,10 @@ namespace WebApplication1
                 options.OperationFilter<ClaimsOperationFilter>();
                 options.OperationFilter<ForbiddenResponseOperationFilter>();
                 options.OperationFilter<UnauthorizedResponseOperationFilter>();
+
+                // Show an example model for JsonPatchDocument<T>.
+                options.SchemaFilter<JsonPatchDocumentSchemaFilter>();
+
                 var info = new OpenApiInfo()
                     {
                         Title = "test",
@@ -158,8 +173,16 @@ namespace WebApplication1
                 .SetApplicationName("akrdefence_system_backend")
                 .PersistKeysToDbContext<KeysContext>();
 
+
+            services.AddHttpContextAccessor()
+                    .AddSingleton<IActionContextAccessor, ActionContextAccessor>()
+                    .AddScoped(x => x
+                    .GetRequiredService<IUrlHelperFactory>()
+                    .GetUrlHelper(x.GetRequiredService<IActionContextAccessor>().ActionContext));
+    
             services.AddProjectCommands();
             services.AddProjectRepositories();
+            services.AddProjectMappers();
         }
 
         // ConfigureContainer is where you can register things directly

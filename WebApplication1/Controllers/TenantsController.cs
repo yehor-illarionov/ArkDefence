@@ -73,5 +73,24 @@ namespace WebApplication1.Controllers
             [FromServices] IDeleteTenantCommand command,
             string tenantId,
             CancellationToken cancellationToken) => command.ExecuteAsync(tenantId);
+
+        /// <summary>
+        /// Gets the tenant with the specified unique identifier.
+        /// </summary>
+        /// <param name="command">The action command.</param>
+        /// <param name="tenantId">The tenants unique identifier.</param>
+        /// <param name="cancellationToken">The cancellation token used to cancel the HTTP request.</param>
+        /// <returns>A 200 OK response containing the tenant or a 404 Not Found if a tenant with the specified unique
+        /// identifier was not found.</returns>
+        [HttpGet("{tenantId}", Name = TenantsControllerRoute.GetTenant)]
+        [HttpHead("{tenantId}", Name = TenantsControllerRoute.HeadTenant)]
+        [SwaggerResponse(StatusCodes.Status200OK, "The tenant with the specified unique identifier.", typeof(Tenant))]
+        [SwaggerResponse(StatusCodes.Status304NotModified, "The tenant has not changed since the date given in the If-Modified-Since HTTP header.")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "A tenant with the specified unique identifier could not be found.")]
+        [SwaggerResponse(StatusCodes.Status406NotAcceptable, "The specified Accept MIME type is not acceptable.")]
+        public Task<IActionResult> Get(
+            [FromServices] IGetTenantCommand command,
+            string tenantId,
+            CancellationToken cancellationToken) => command.ExecuteAsync(tenantId);
     }
 } 
