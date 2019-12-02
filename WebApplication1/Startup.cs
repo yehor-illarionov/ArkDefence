@@ -59,50 +59,35 @@ namespace WebApplication1
                 options.Filters.Add(new HttpResponseExceptionFilter());
 
             }).AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-
             services.AddRouting(
                 options =>
                 {
                     // All generated URL's should be lower-case.
                     options.LowercaseUrls = true;
                 });
-
-            //services.AddControllersWithViews().AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
             services.AddDbContext<TenantDbContext>(options =>
               options.UseNpgsql(
                    Configuration.GetConnectionString("TenantConnection")));
-
             services.AddMultiTenant()
                 .WithEFCoreStore<TenantDbContext, Tenant>()
                 .WithRouteStrategy().WithFallbackStrategy("host");
-
             services.AddDbContext<NextAppContext>();
-        
-
-            //   services.AddDbContext<ApplicationDbContext>(options =>
-            //     options.UseNpgsql(
-            //          Configuration.GetConnectionString("DefaultConnection")));
-
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(options =>
             {
                 var assembly = typeof(Startup).Assembly;
                 //var assemblyProduct = assembly.GetCustomAttribute<AssemblyProductAttribute>().Product;
                // var assemblyDescription = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
-
                 options.DescribeAllParametersInCamelCase();
                 options.EnableAnnotations();
-
                     // Add the XML comment file for this assembly, so its contents can be displayed.
                 options.IncludeXmlCommentsIfExists(assembly);
                 options.OperationFilter<CorrelationIdOperationFilter>();
                 options.OperationFilter<ClaimsOperationFilter>();
                 options.OperationFilter<ForbiddenResponseOperationFilter>();
                 options.OperationFilter<UnauthorizedResponseOperationFilter>();
-
                 // Show an example model for JsonPatchDocument<T>.
                 options.SchemaFilter<JsonPatchDocumentSchemaFilter>();
-
                 var info = new OpenApiInfo()
                     {
                         Title = "test",
@@ -110,7 +95,6 @@ namespace WebApplication1
                         Version = "v1"
                     };
                 options.SwaggerDoc("v1", info);
-    
             });
             
             services.AddSignalR();
@@ -157,10 +141,10 @@ namespace WebApplication1
             // If the Name claim isn't unique, users could receive messages 
             // intended for a different user!
             services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
-            // services.AddTransient<TennantRepository>();
+            //
             services.AddTransient<SystemControllerRepository>();
             services.AddTransient<TerminalRepository>();
-
+            //
             services.AddDbContext<KeysContext>(options =>
              options.UseNpgsql(
                   Configuration.GetConnectionString("KeysConnection")));
@@ -172,14 +156,8 @@ namespace WebApplication1
                 })
                 .SetApplicationName("akrdefence_system_backend")
                 .PersistKeysToDbContext<KeysContext>();
-
-
             services.AddHttpContextAccessor()
                     .AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-                    //.AddScoped(x => x
-                   // .GetRequiredService<IUrlHelperFactory>()
-                    //.GetUrlHelper(x.GetRequiredService<IActionContextAccessor>().ActionContext));
-    
             services.AddProjectCommands();
             services.AddProjectRepositories();
             services.AddProjectMappers();
@@ -203,25 +181,18 @@ namespace WebApplication1
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime applicationLifetime)
         {
             if (env.IsDevelopment())
-            {
-               
+            {  
                // app.UseExceptionHandler("/error");
             }
             app.UseExceptionHandler("/error");
-
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
-       
-         
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
-
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
-
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
@@ -229,26 +200,16 @@ namespace WebApplication1
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 
             });
-
-
             app.UseRouting();
             app.UseMultiTenant();
             app.UseAuthentication();
             app.UseAuthorization();
-
-    
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapControllerRoute("host", "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute("default", "{__tenant__}/{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapHub<ControllerHub>("hubs/controllerhub");
-            });
-
-            applicationLifetime.ApplicationStopped.Register(() =>
-            {
-                Container.Dispose();
             });
         }
     }

@@ -21,7 +21,10 @@ namespace WebApplication1
             services.AddSingleton<ITenantRepository,TenantRepository>();
 
         public static IServiceCollection AddProjectMappers(this IServiceCollection services) =>
-            services.AddTransient<IMapper<Data.Tenant, ViewModels.Tenant>, TenantToTenantMapper>();
+            services
+                .AddTransient<IMapper<Data.Tenant, ViewModels.Tenant>, TenantToTenantMapper>()
+                .AddSingleton<IMapper<Data.Tenant, ViewModels.SaveTenant>, TenantToSaveTenantMapper>()
+                .AddSingleton<IMapper<ViewModels.SaveTenant, Data.Tenant>, TenantToSaveTenantMapper>();
 
         public static IServiceCollection AddProjectServices(this IServiceCollection services) =>
             services.AddSingleton<IClockService, ClockService>();

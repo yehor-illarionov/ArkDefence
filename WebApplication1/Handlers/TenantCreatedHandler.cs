@@ -8,18 +8,18 @@ using WebApplication1.Messaging.Events;
 
 namespace WebApplication1.Handlers
 {
-    public class TennantCreatedHandler : IEventHandler<TennantCreated>
+    public class TenantCreatedHandler : IEventHandler<TenantCreated>
     {
         private readonly ILogger log;
 
-        public TennantCreatedHandler(ILogger<TennantCreatedHandler> log)
+        public TenantCreatedHandler(ILogger<TenantCreatedHandler> log)
         {
             this.log = log;
         }
 
-        public Task Handle(TennantCreated @event)
+        public Task Handle(TenantCreated @event)
         {
-            log.LogInformation($"Tennant created with id: '{@event.Id}' on: '{@event.CreationTime.ToString()}'");
+            log.LogInformation($"Tenant created with id: '{@event.Id}' on: '{@event.CreationTime.ToString()}'");
             // throw new NotImplementedException();
             return Task.CompletedTask;
         }

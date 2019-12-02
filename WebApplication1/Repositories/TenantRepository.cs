@@ -95,7 +95,7 @@ namespace WebApplication1.Repositories
         public Task<Tenant> Add(Tenant tenant, CancellationToken cancellationToken)
         {
             Tenants.Add(tenant);
-            tenant.Id=Tenants.Max(x=>x.Id)+1;
+            tenant.Id=Guid.NewGuid().ToString();
             return Task.FromResult(tenant);
         }
 

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.Messaging.Events
 {
-    public class TennantCreated : IEvent
+    public class TenantCreated : IEvent
     {
-        public TennantCreated(string id, DateTime creationTime)
+        public TenantCreated(string id, DateTime creationTime)
         {
             Id = id;
             CreationTime = creationTime;
