@@ -21,8 +21,10 @@ namespace WebApplication1.ViewModelSchemaFilters
                 Email="some@example.com",
                 Phone="+380984563214"
             };
-            schema.Default = (IOpenApiAny)tenant;
-            schema.Example = (IOpenApiAny)tenant;
+            //  schema.Default = tenant;
+            //schema.
+            var type = context.ApiModel.Type;
+            
         }
     }
 }

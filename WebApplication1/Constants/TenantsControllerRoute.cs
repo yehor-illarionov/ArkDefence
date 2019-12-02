@@ -2,7 +2,7 @@ using System;
 
 namespace WebApplication1.Constants
 {
-    public static class TenantsControllerRoute
+    public static class TenantControllerRoute
     {
         public const string DeleteTenant = ControllerName.Tenant + nameof(DeleteTenant);
         public const string GetTenant = ControllerName.Tenant + nameof(GetTenant);

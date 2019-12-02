@@ -14,10 +14,12 @@ using Microsoft.Net.Http.Headers;
 using WebApplication1.Constants;
 using System.Threading;
 using WebApplication1.Commands;
+using WebApplication1.ViewModels;
 
 namespace WebApplication1.Controllers
 {
-    [Route("/api/system/[controller]")]
+    [Area("api/system")]
+    [Route("[area]/[controller]", Name=ControllerName.Tenant)]
     [ApiController]
     public class TenantsController : ControllerBase{
         /// <summary>
@@ -66,13 +68,13 @@ namespace WebApplication1.Controllers
         /// <param name="cancellationToken">The cancellation token used to cancel the HTTP request.</param>
         /// <returns>A 204 No Content response if the tenant was deleted or a 404 Not Found if a tenant with the specified
         /// unique identifier was not found.</returns>
-        [HttpDelete("{tenantId}", Name = TenantsControllerRoute.DeleteTenant)]
+        [HttpDelete("{tenantId}", Name = TenantControllerRoute.DeleteTenant)]
         [SwaggerResponse(StatusCodes.Status204NoContent, "The tenant with the specified unique identifier was deleted.")]
         [SwaggerResponse(StatusCodes.Status404NotFound, "A tenant with the specified unique identifier was not found.")]
         public Task<IActionResult> Delete(
             [FromServices] IDeleteTenantCommand command,
             string tenantId,
-            CancellationToken cancellationToken) => command.ExecuteAsync(tenantId);
+            CancellationToken cancellationToken) => command.ExecuteAsync(tenantId, cancellationToken);
 
         /// <summary>
         /// Gets the tenant with the specified unique identifier.
@@ -82,15 +84,39 @@ namespace WebApplication1.Controllers
         /// <param name="cancellationToken">The cancellation token used to cancel the HTTP request.</param>
         /// <returns>A 200 OK response containing the tenant or a 404 Not Found if a tenant with the specified unique
         /// identifier was not found.</returns>
-        [HttpGet("{tenantId}", Name = TenantsControllerRoute.GetTenant)]
-        [HttpHead("{tenantId}", Name = TenantsControllerRoute.HeadTenant)]
-        [SwaggerResponse(StatusCodes.Status200OK, "The tenant with the specified unique identifier.", typeof(Tenant))]
+        [HttpGet("{tenantId}", Name = TenantControllerRoute.GetTenant)]
+        [HttpHead("{tenantId}", Name = TenantControllerRoute.HeadTenant)]
+        [SwaggerResponse(StatusCodes.Status200OK, "The tenant with the specified unique identifier.", typeof(ViewModels.Tenant))]
         [SwaggerResponse(StatusCodes.Status304NotModified, "The tenant has not changed since the date given in the If-Modified-Since HTTP header.")]
         [SwaggerResponse(StatusCodes.Status404NotFound, "A tenant with the specified unique identifier could not be found.")]
         [SwaggerResponse(StatusCodes.Status406NotAcceptable, "The specified Accept MIME type is not acceptable.")]
         public Task<IActionResult> Get(
             [FromServices] IGetTenantCommand command,
             string tenantId,
-            CancellationToken cancellationToken) => command.ExecuteAsync(tenantId);
+            CancellationToken cancellationToken)
+        {
+            //Console.WriteLine(ControllerContext.ActionDescriptor.AttributeRouteInfo.Name);
+            return command.ExecuteAsync(tenantId, cancellationToken); 
+        }
+
+        /// <summary>
+        /// Gets a collection of tenants using the specified page number and number of items per page.
+        /// </summary>
+        /// <param name="command">The action command.</param>
+        /// <param name="pageOptions">The page options.</param>
+        /// <param name="cancellationToken">The cancellation token used to cancel the HTTP request.</param>
+        /// <returns>A 200 OK response containing a collection of tenants, a 400 Bad Request if the page request
+        /// parameters are invalid or a 404 Not Found if a page with the specified page number was not found.
+        /// </returns>
+        [HttpGet("", Name = TenantControllerRoute.GetTenantPage)]
+        [HttpHead("", Name = TenantControllerRoute.HeadTenantPage)]
+        [SwaggerResponse(StatusCodes.Status200OK, "A collection of cars for the specified page.", typeof(PageResultTenant))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "The page request parameters are invalid.")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "A page with the specified page number was not found.")]
+        [SwaggerResponse(StatusCodes.Status406NotAcceptable, "The specified Accept MIME type is not acceptable.")]
+        public Task<IActionResult> GetPage(
+            [FromServices] IGetTenantPageCommand command,
+            [FromQuery] PageOptions pageOptions,
+            CancellationToken cancellationToken) => command.ExecuteAsync(pageOptions, cancellationToken);
     }
 } 

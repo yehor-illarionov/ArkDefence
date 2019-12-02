@@ -12,7 +12,8 @@ namespace WebApplication1
         public static IServiceCollection AddProjectCommands(this IServiceCollection services)=>
             services
                 .AddTransient<IDeleteTenantCommand, DeleteTenantCommmand>()
-                .AddTransient<IGetTenantCommand,GetTenantCommand>();
+                .AddTransient<IGetTenantCommand,GetTenantCommand>()
+                .AddTransient<IGetTenantPageCommand,GetTenantPageCommand>();
 
         public static IServiceCollection AddProjectRepositories(this IServiceCollection services)=>
             services.AddSingleton<ITenantRepository,TenantRepository>();

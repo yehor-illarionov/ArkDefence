@@ -42,6 +42,7 @@ namespace WebApplication1.Commands
                 }
             }
             var tenantViewModel = tenantMapper.Map(tenant);
+            Console.WriteLine($"Generetade URI:'{tenantViewModel.Url}'");
             httpContext.Response.Headers.Add(HeaderNames.LastModified, tenant.Modified.ToString("R"));
             return new OkObjectResult(tenantViewModel);
         }

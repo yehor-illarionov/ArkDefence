@@ -175,10 +175,10 @@ namespace WebApplication1
 
 
             services.AddHttpContextAccessor()
-                    .AddSingleton<IActionContextAccessor, ActionContextAccessor>()
-                    .AddScoped(x => x
-                    .GetRequiredService<IUrlHelperFactory>()
-                    .GetUrlHelper(x.GetRequiredService<IActionContextAccessor>().ActionContext));
+                    .AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+                    //.AddScoped(x => x
+                   // .GetRequiredService<IUrlHelperFactory>()
+                    //.GetUrlHelper(x.GetRequiredService<IActionContextAccessor>().ActionContext));
     
             services.AddProjectCommands();
             services.AddProjectRepositories();
@@ -240,10 +240,9 @@ namespace WebApplication1
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapControllerRoute("host", "{controller=Home}/{action=Index}");
-                endpoints.MapControllerRoute("default", "{__tenant__}/{controller=Home}/{action=Index}");
+                endpoints.MapControllerRoute("host", "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute("default", "{__tenant__}/{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapHub<ControllerHub>("hubs/controllerhub");
-
             });
 
             applicationLifetime.ApplicationStopped.Register(() =>

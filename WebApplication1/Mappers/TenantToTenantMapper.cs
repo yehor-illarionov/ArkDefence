@@ -6,18 +6,22 @@ using Boxed.Mapping;
 using Boxed.AspNetCore;
 using WebApplication1.Data;
 using WebApplication1.ViewModels;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using WebApplication1.Constants;
+using WebApplication1.Controllers;
+using Microsoft.AspNetCore.Http;
 
 namespace WebApplication1.Mappers
 {
     public class TenantToTenantMapper : IMapper<Data.Tenant, ViewModels.Tenant>
     {
-        private readonly IUrlHelper urlHelper;
+        private readonly LinkGenerator linkGenerator;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public TenantToTenantMapper(IUrlHelper urlHelper)
+        public TenantToTenantMapper(LinkGenerator linkGenerator, IHttpContextAccessor httpContextAccessor)
         {
-            this.urlHelper = urlHelper ?? throw new ArgumentNullException(nameof(urlHelper));
+            this.linkGenerator = linkGenerator ?? throw new ArgumentNullException(nameof(linkGenerator));
+            this.httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         }
 
         public void Map(Data.Tenant source, ViewModels.Tenant destination)
@@ -37,8 +41,13 @@ namespace WebApplication1.Mappers
             destination.Name = source.Name;
             destination.Phone = source.Phone;
             destination.Email = source.Email;
-            destination.Url = 
-                urlHelper.Link(TenantsControllerRoute.GetTenant,new { source.Id});
+            destination.Url =
+              linkGenerator.GetPathByRouteValues(
+                  TenantControllerRoute.GetTenant, 
+                  new { tenantId = source.Id }, 
+                  httpContextAccessor.HttpContext.Request.PathBase);
         }
+
+        
     }
 }
