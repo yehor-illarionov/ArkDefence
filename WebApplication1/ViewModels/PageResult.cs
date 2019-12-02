@@ -22,6 +22,7 @@ namespace WebApplication1.ViewModels
         public int TotalPages { get; set; }
 
         public List<T> Items { get; set; }
+
     }
 
     //[SwaggerSchemaFilter(typeof(PageResultTenantSchemaFilter))]

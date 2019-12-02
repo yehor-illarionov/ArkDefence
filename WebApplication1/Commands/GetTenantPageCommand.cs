@@ -56,34 +56,13 @@ namespace WebApplication1.Commands
             // See https://www.iana.org/assignments/link-relations/link-relations.xhtml
             this.httpContextAccessor.HttpContext.Response.Headers.Add(
                 "Link",
-                this.GetLinkValue(page));
+                this.GetPageLinkValue(
+                    generator: linkGenerator,
+                    pathBase: httpContextAccessor.HttpContext.Request.PathBase,
+                    actionRouteName: TenantControllerRoute.GetTenantPage,
+                    page: page));
 
             return new OkObjectResult(page);
-        }
-
-        private string GetLinkValue(PageResultTenant page)
-        {
-            var values = new List<string>(4);
-            if (page.HasNextPage)
-            {
-                values.Add(GetLinkValueItem("next", page.Page + 1, page.Count));
-            }
-            if (page.HasPreviousPage)
-            {
-                values.Add(GetLinkValueItem("previous", page.Page - 1, page.Count));
-            }
-            values.Add(this.GetLinkValueItem("first", 1, page.Count));
-            values.Add(this.GetLinkValueItem("last", page.TotalPages, page.Count));
-            return string.Join(", ", values);
-        }
-
-        private string GetLinkValueItem(string rel, int page, int count)
-        {
-            var url = linkGenerator.GetPathByRouteValues(
-                TenantControllerRoute.GetTenantPage, 
-                new PageOptions { Page = page, Count = count },
-                httpContextAccessor.HttpContext.Request.PathBase);
-            return $"<{url}>; rel=\"{rel}\"";
         }
     }
 }
