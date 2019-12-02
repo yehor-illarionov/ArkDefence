@@ -118,5 +118,22 @@ namespace WebApplication1.Controllers
             [FromServices] IGetTenantPageCommand command,
             [FromQuery] PageOptions pageOptions,
             CancellationToken cancellationToken) => command.ExecuteAsync(pageOptions, cancellationToken);
+
+        /// <summary>
+        /// Creates a new tenant.
+        /// </summary>
+        /// <param name="command">The action command.</param>
+        /// <param name="tenant">The tenant to create.</param>
+        /// <param name="cancellationToken">The cancellation token used to cancel the HTTP request.</param>
+        /// <returns>A 201 Created response containing the newly created tenant or a 400 Bad Request if the tenant is
+        /// invalid.</returns>
+        [HttpPost("", Name = TenantControllerRoute.PostTenant)]
+        [SwaggerResponse(StatusCodes.Status201Created, "The tenant was created.", typeof(ViewModels.Tenant))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "The tenant is invalid.")]
+        [SwaggerResponse(StatusCodes.Status406NotAcceptable, "The specified Accept MIME type is not acceptable.")]
+        public Task<IActionResult> Post(
+            [FromServices] IPostTenantCommand command,
+            [FromBody] SaveTenant tenant,
+            CancellationToken cancellationToken) => command.ExecuteAsync(tenant);
     }
 } 

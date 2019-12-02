@@ -183,6 +183,7 @@ namespace WebApplication1
             services.AddProjectCommands();
             services.AddProjectRepositories();
             services.AddProjectMappers();
+            services.AddProjectServices();
         }
 
         // ConfigureContainer is where you can register things directly

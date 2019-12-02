@@ -12,5 +12,6 @@ namespace WebApplication1.Data
         public string Phone { get; set; }
         public string ConnectionString { get; set; }
         public DateTimeOffset Modified { get; set; }
+        public DateTimeOffset Created { get; set; }
     }
 }
