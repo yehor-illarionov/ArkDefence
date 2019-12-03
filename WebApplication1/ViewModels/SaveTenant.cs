@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApplication1.Attributes;
 
 namespace WebApplication1.ViewModels
 {
+    [IsDefaultConnectionSaveTenant]
     public class SaveTenant
     {
         /// <summary>

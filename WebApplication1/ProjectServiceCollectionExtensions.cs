@@ -15,7 +15,8 @@ namespace WebApplication1
                 .AddTransient<IDeleteTenantCommand, DeleteTenantCommmand>()
                 .AddTransient<IGetTenantCommand,GetTenantCommand>()
                 .AddTransient<IGetTenantPageCommand,GetTenantPageCommand>()
-                .AddTransient<IPostTenantCommand,PostTenantCommand>();
+                .AddTransient<IPostTenantCommand,PostTenantCommand>()
+                .AddTransient<IPutTenantCommand,PutTenantCommand>();
 
         public static IServiceCollection AddProjectRepositories(this IServiceCollection services)=>
             services.AddSingleton<ITenantRepository,TenantRepository>();
@@ -27,6 +28,8 @@ namespace WebApplication1
                 .AddSingleton<IMapper<ViewModels.SaveTenant, Data.Tenant>, TenantToSaveTenantMapper>();
 
         public static IServiceCollection AddProjectServices(this IServiceCollection services) =>
-            services.AddSingleton<IClockService, ClockService>();
+            services
+                .AddSingleton<IClockService, ClockService>()
+                .AddSingleton<IHostTenantInfo, HostTenantInfo>();
     }
 }

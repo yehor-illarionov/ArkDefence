@@ -131,9 +131,32 @@ namespace WebApplication1.Controllers
         [SwaggerResponse(StatusCodes.Status201Created, "The tenant was created.", typeof(ViewModels.Tenant))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "The tenant is invalid.")]
         [SwaggerResponse(StatusCodes.Status406NotAcceptable, "The specified Accept MIME type is not acceptable.")]
+        [SwaggerResponse(StatusCodes.Status409Conflict, "The tenant already exists.")]
+        [SwaggerResponse(StatusCodes.Status417ExpectationFailed, "Postgres cannot connect using provided connectionString.")]
         public Task<IActionResult> Post(
             [FromServices] IPostTenantCommand command,
             [FromBody] SaveTenant tenant,
             CancellationToken cancellationToken) => command.ExecuteAsync(tenant);
+
+        /// <summary>
+        /// Updates an existing tenant with the specified unique identifier.
+        /// </summary>
+        /// <param name="command">The action command.</param>
+        /// <param name="tenantId">The car identifier.</param>
+        /// <param name="tenant">The car to update.</param>
+        /// <param name="cancellationToken">The cancellation token used to cancel the HTTP request.</param>
+        /// <returns>A 200 OK response containing the newly updated tenant, a 400 Bad Request if the tenant is invalid or a
+        /// or a 404 Not Found if a tenant with the specified unique identifier was not found.</returns>
+        [HttpPut("{tenantId}", Name = TenantControllerRoute.PutTenant)]
+        [SwaggerResponse(StatusCodes.Status200OK, "The tenant was updated.", typeof(ViewModels.Tenant))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "The tenant is invalid.")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "A tenant with the specified unique identifier could not be found.")]
+        [SwaggerResponse(StatusCodes.Status406NotAcceptable, "The specified Accept MIME type is not acceptable.")]
+        [SwaggerResponse(StatusCodes.Status417ExpectationFailed, "Postgres cannot connect using provided connectionString.")]
+        public Task<IActionResult> Put(
+            [FromServices] IPutTenantCommand command,
+            string tenantId,
+            [FromBody] SaveTenant tenant,
+            CancellationToken cancellationToken) => command.ExecuteAsync(tenantId, tenant, cancellationToken);
     }
 } 

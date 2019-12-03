@@ -92,10 +92,11 @@ namespace WebApplication1.Repositories
             },
         };
 
-        public Task<Tenant> Add(Tenant tenant, CancellationToken cancellationToken)
+        public Task<Tenant> Add(Tenant tenant,out RepositoryError error, CancellationToken cancellationToken)
         {
             Tenants.Add(tenant);
             tenant.Id=Guid.NewGuid().ToString();
+            error = RepositoryError.None;
             return Task.FromResult(tenant);
         }
 
