@@ -10,13 +10,14 @@ namespace WebApplication1
 {
     public static class ProjectServiceCollectionExtensions
     {
-        public static IServiceCollection AddProjectCommands(this IServiceCollection services)=>
+        public static IServiceCollection AddProjectCommands(this IServiceCollection services) =>
             services
                 .AddTransient<IDeleteTenantCommand, DeleteTenantCommmand>()
-                .AddTransient<IGetTenantCommand,GetTenantCommand>()
-                .AddTransient<IGetTenantPageCommand,GetTenantPageCommand>()
-                .AddTransient<IPostTenantCommand,PostTenantCommand>()
-                .AddTransient<IPutTenantCommand,PutTenantCommand>();
+                .AddTransient<IGetTenantCommand, GetTenantCommand>()
+                .AddTransient<IGetTenantPageCommand, GetTenantPageCommand>()
+                .AddTransient<IPostTenantCommand, PostTenantCommand>()
+                .AddTransient<IPutTenantCommand, PutTenantCommand>()
+                .AddTransient<IPatchTenantCommand, PatchTenantCommand>();
 
         public static IServiceCollection AddProjectRepositories(this IServiceCollection services)=>
             services.AddSingleton<ITenantRepository,TenantRepository>();

@@ -15,21 +15,26 @@ namespace WebApplication1.Services
 
         public HostTenantInfo(IMultiTenantStore context){
             this.context = context ?? throw new ArgumentNullException(nameof(context));
-            _ = Init();
+            Init().Wait();
         }
 
         private async Task Init()
         {
             tenantInfo = await context.TryGetAsync(id).ConfigureAwait(false);
+            if(tenantInfo is null)
+            {
+                throw new ArgumentNullException(nameof(tenantInfo));
+            }
         }
         public TenantInfo TenantInfo()
         {
-            return new TenantInfo(
-                tenantInfo.Id,
-                tenantInfo.Identifier,
-                tenantInfo.Name,
-                tenantInfo.ConnectionString,
-                tenantInfo.Items);
+            //return new TenantInfo(
+            //    tenantInfo.Id,
+            //    tenantInfo.Identifier,
+            //    tenantInfo.Name,
+            //    tenantInfo.ConnectionString,
+            //    tenantInfo.Items);
+            return tenantInfo;
         }
     }
 }

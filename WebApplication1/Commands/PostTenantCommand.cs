@@ -46,14 +46,14 @@ namespace WebApplication1.Commands
             }
             else
             {
-                if (this.TestConnection(host.TenantInfo(), parameter.ConnectionString)== false)
-                {
-                    return new StatusCodeResult(417);//Expectation failed
-                }
+                //if (this.TestConnection(host.TenantInfo(), parameter.ConnectionString)== false)
+                //{
+                //    return new StatusCodeResult(417);//Expectation failed
+                //}
             }
 
             var tenant = saveTenantToTenantMapper.Map(parameter);
-            tenant = await tenantRepository.Add(tenant, out RepositoryError error,cancellationToken);
+            tenant = await tenantRepository.Add(tenant, out RepositoryError error,cancellationToken).ConfigureAwait(false);
             if (error == RepositoryError.AlreadyExists)
             {
                 return new ConflictResult();
@@ -66,11 +66,11 @@ namespace WebApplication1.Commands
 
             if (parameter.IsDefaultConnection)
             {
-                await bus.PublishAsync(new TenantCreated(tenant.Id, tenant.Created.UtcDateTime));
+                await bus.PublishAsync(new TenantCreated(tenant.Id, tenant.Created.UtcDateTime)).ConfigureAwait(false);
             }
             else
             {
-                await bus.PublishAsync(new TenantCreatedNotDefault(tenant.Id, tenant.Created.UtcDateTime));
+                await bus.PublishAsync(new TenantCreatedNotDefault(tenant.Id, tenant.Created.UtcDateTime)).ConfigureAwait(false);
             }
            
             return new CreatedAtRouteResult(

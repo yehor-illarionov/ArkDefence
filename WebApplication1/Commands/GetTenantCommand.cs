@@ -27,7 +27,7 @@ namespace WebApplication1.Commands
 
         public async Task<IActionResult> ExecuteAsync(string parameter, CancellationToken cancellationToken = default)
         {
-            var tenant = await tenantRepository.Get(parameter, cancellationToken);
+            var tenant = await tenantRepository.Get(parameter, cancellationToken).ConfigureAwait(false);
             if(tenant is null)
             {
                 return new NotFoundResult();

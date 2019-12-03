@@ -35,12 +35,12 @@ namespace WebApplication1.Commands
 
         public async Task<IActionResult> ExecuteAsync(PageOptions parameter, CancellationToken cancellationToken = default)
         {
-            var tenants = await tenantRepository.GetPage(parameter.Page.Value ,parameter.Count.Value, cancellationToken);
+            var tenants = await tenantRepository.GetPage(parameter.Page.Value ,parameter.Count.Value, cancellationToken).ConfigureAwait(false);
             if(tenants is null)
             {
                 return new NotFoundResult();
             }
-            var (totalCount, totalPages) = await tenantRepository.GetTotalPages(parameter.Count.Value, cancellationToken);
+            var (totalCount, totalPages) = await tenantRepository.GetTotalPages(parameter.Count.Value, cancellationToken).ConfigureAwait(false);
             var tenantViewModels = tenantMapper.MapList(tenants);
             var page = new PageResultTenant()
             {

@@ -36,7 +36,7 @@ namespace WebApplication1.Commands
             SaveTenant saveTenant, 
             CancellationToken cancellationToken = default)
         {
-            var tenant = await tenantRepository.Get(tenantId, cancellationToken);
+            var tenant = await tenantRepository.Get(tenantId, cancellationToken).ConfigureAwait(false);
             if(tenant is null)
             {
                 return new NotFoundResult();
@@ -49,7 +49,7 @@ namespace WebApplication1.Commands
                 }
             }
             saveTenantToTenantMapper.Map(saveTenant, tenant);
-            tenant = await tenantRepository.Update(tenant, cancellationToken);
+            tenant = await tenantRepository.Update(tenant, cancellationToken).ConfigureAwait(false);
             var tenantViewModel = tenantToTenantMapper.Map(tenant);
             return new OkObjectResult(tenantViewModel);
         }

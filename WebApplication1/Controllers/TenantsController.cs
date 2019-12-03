@@ -15,6 +15,7 @@ using WebApplication1.Constants;
 using System.Threading;
 using WebApplication1.Commands;
 using WebApplication1.ViewModels;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace WebApplication1.Controllers
 {
@@ -158,5 +159,26 @@ namespace WebApplication1.Controllers
             string tenantId,
             [FromBody] SaveTenant tenant,
             CancellationToken cancellationToken) => command.ExecuteAsync(tenantId, tenant, cancellationToken);
+
+        /// <summary>
+        /// Patches the tenant with the specified unique identifier.
+        /// </summary>
+        /// <param name="command">The action command.</param>
+        /// <param name="tenantId">The cars unique identifier.</param>
+        /// <param name="patch">The patch document. See http://jsonpatch.com.</param>
+        /// <param name="cancellationToken">The cancellation token used to cancel the HTTP request.</param>
+        /// <returns>A 200 OK if the tenant was patched, a 400 Bad Request if the patch was invalid or a 404 Not Found
+        /// if a tenant with the specified unique identifier was not found.</returns>
+        [HttpPatch("{tenantId}", Name = TenantControllerRoute.PatchTenant)]
+        [SwaggerResponse(StatusCodes.Status200OK, "The patched tenant with the specified unique identifier.", typeof(ViewModels.Tenant))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "The patch document is invalid.")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "A tenant with the specified unique identifier could not be found.")]
+        [SwaggerResponse(StatusCodes.Status406NotAcceptable, "The specified Accept MIME type is not acceptable.")]
+        [SwaggerResponse(StatusCodes.Status417ExpectationFailed, "Postgres cannot connect using provided connectionString.")]
+        public Task<IActionResult> Patch(
+            [FromServices] IPatchTenantCommand command,
+            string tenantId,
+            [FromBody] JsonPatchDocument<SaveTenant> patch,
+            CancellationToken cancellationToken) => command.ExecuteAsync(tenantId, patch,cancellationToken);
     }
 } 

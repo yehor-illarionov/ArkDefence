@@ -35,6 +35,7 @@ using Boxed.AspNetCore.Swagger.OperationFilters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Boxed.AspNetCore.Swagger.SchemaFilters;
+using WebApplication1.Handlers;
 
 namespace WebApplication1
 {
@@ -172,9 +173,11 @@ namespace WebApplication1
         // "Without ConfigureContainer" mechanism shown later.
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            var busBuilder = new BusBuilder()
-              .RegisterHandlers(Assembly.GetEntryAssembly());
-            builder.RegisterMicroBus(busBuilder);
+            //var busBuilder = new BusBuilder()
+            //  .RegisterHandlers(Assembly.GetEntryAssembly());
+            // // .RegisterGlobalHandler<TenantCreatedHandler>();
+               
+            //builder.RegisterMicroBus(busBuilder);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

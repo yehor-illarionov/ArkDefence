@@ -9,7 +9,7 @@ using WebApplication1.Messaging.Events;
 
 namespace WebApplication1.Handlers
 {
-    public class TenantCreatedNotDefaultHandler : IEventHandler<TenantCreated>
+    public class TenantCreatedNotDefaultHandler : IEventHandler<TenantCreatedNotDefault>
     {
         private readonly ILogger log;
         private readonly IMultiTenantStore context;
@@ -20,7 +20,7 @@ namespace WebApplication1.Handlers
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task Handle(TenantCreated @event)
+        public async Task Handle(TenantCreatedNotDefault @event)
         {
             //TODO exceptions
             log.LogInformation($"NonDefault Tenant created with id: '{@event.Id}' on: '{@event.CreationTime.ToString()}'");
