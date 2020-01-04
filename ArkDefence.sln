@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29123.89
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestClient", "TestClient\TestClient.csproj", "{046091D9-C0A8-41BD-B0D5-29778D52452E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{EA7D443A-495B-4818-AD85-2496BF752F44}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Host", "WebApplication1\Host.csproj", "{EA7D443A-495B-4818-AD85-2496BF752F44}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{014B310F-161D-430A-9E0E-6CF81FBBC948}"
 EndProject

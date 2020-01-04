@@ -12,6 +12,9 @@ using GreenPipes;
 
 namespace WebApplication1
 {
+    /// <summary>
+    /// кастомная конфигурация и импортируемые (внешние) сервисы
+    /// </summary>
     public static class CustomServiceCollectionExtensions
     {
         public static IServiceCollection AddCustomMasstransit(this IServiceCollection services)

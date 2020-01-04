@@ -8,13 +8,16 @@ using WebApplication1.Services;
 
 namespace WebApplication1
 {
+    /// <summary>
+    /// сервисы самого проекта
+    /// </summary>
     public static class ProjectServiceCollectionExtensions
     {
         public static IServiceCollection AddProjectCommands(this IServiceCollection services) =>
             services
                 .AddTransient<IDeleteTenantCommand, DeleteTenantCommmand>()
-                .AddTransient<IGetTenantCommand, GetTenantCommand>()
-                .AddTransient<IGetTenantPageCommand, GetTenantPageCommand>()
+                .AddTransient<IGetTenantRequest, GetTenantRequest>()
+                .AddTransient<IGetTenantPageRequest, GetTenantPageRequest>()
                 .AddTransient<IPostTenantCommand, PostTenantCommand>()
                 .AddTransient<IPutTenantCommand, PutTenantCommand>()
                 .AddTransient<IPatchTenantCommand, PatchTenantCommand>();

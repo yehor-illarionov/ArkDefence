@@ -92,7 +92,7 @@ namespace WebApplication1.Controllers
         [SwaggerResponse(StatusCodes.Status404NotFound, "A tenant with the specified unique identifier could not be found.")]
         [SwaggerResponse(StatusCodes.Status406NotAcceptable, "The specified Accept MIME type is not acceptable.")]
         public Task<IActionResult> Get(
-            [FromServices] IGetTenantCommand command,
+            [FromServices] IGetTenantRequest command,
             string tenantId,
             CancellationToken cancellationToken)
         {
@@ -116,7 +116,7 @@ namespace WebApplication1.Controllers
         [SwaggerResponse(StatusCodes.Status404NotFound, "A page with the specified page number was not found.")]
         [SwaggerResponse(StatusCodes.Status406NotAcceptable, "The specified Accept MIME type is not acceptable.")]
         public Task<IActionResult> GetPage(
-            [FromServices] IGetTenantPageCommand command,
+            [FromServices] IGetTenantPageRequest command,
             [FromQuery] PageOptions pageOptions,
             CancellationToken cancellationToken) => command.ExecuteAsync(pageOptions, cancellationToken);
 
