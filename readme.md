@@ -47,7 +47,7 @@ REST API сервер
 
 ## Авторизация
 
-OAUTH2 (Auth0) JwtBearer
+OpenId (Auth0) JwtBearer
 
 Для signalr jwtbearer добавляется в uri через параметр access_token. В пути хаба должен быть фрагмент /hubs/.
 
