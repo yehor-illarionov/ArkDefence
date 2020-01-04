@@ -1,5 +1,4 @@
 ﻿using Core.Domain;
-using Enexure.MicroBus;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

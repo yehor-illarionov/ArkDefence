@@ -3,9 +3,12 @@ using MassTransit.AspNetCoreIntegration;
 using MassTransit.ExtensionsDependencyInjectionIntegration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using WebApplication1.Consumers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
+using GreenPipes;
 
 namespace WebApplication1
 {
@@ -18,17 +21,25 @@ namespace WebApplication1
             {
                 return Bus.Factory.CreateUsingInMemory(cfg =>
                 {
-                    cfg.ReceiveEndpoint("tenant-created", ep =>
+                    //cfg.ReceiveEndpoint("tenant-created", ep =>
+                    //{
+                    //    ep.UseMessageRetry(r => r.Interval(2, 100));
+                    //    ep.ConfigureConsumer<TenantCreatedConsumer>(serviceProvider);
+                    //});
+                    cfg.ReceiveEndpoint("tenant-created-notdefault", ep =>
                     {
-                         //ep.
+                        ep.UseMessageRetry(r => r.Interval(2, 100));
+                        ep.ConfigureConsumer<TenantCreatedNotDefaultConsumer>(serviceProvider);
                     });
+                    cfg.UseInMemoryScheduler();
                 });
             }
 
             // local function to configure consumers
             void ConfigureMassTransit(IServiceCollectionConfigurator configurator)
             {
-               // configurator.AddConsumer<OrderConsumer>();
+               // configurator.AddConsumer<TenantCreatedConsumer>();
+                configurator.AddConsumer<TenantCreatedNotDefaultConsumer>();
             }
 
             // configures MassTransit to integrate with the built-in dependency injection

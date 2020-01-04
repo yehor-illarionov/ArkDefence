@@ -31,6 +31,6 @@ namespace WebApplication1
         public static IServiceCollection AddProjectServices(this IServiceCollection services) =>
             services
                 .AddSingleton<IClockService, ClockService>()
-                .AddSingleton<IHostTenantInfo, HostTenantInfo>();
+                .AddScoped<IHostTenantInfo, HostTenantInfo>();
     }
 }

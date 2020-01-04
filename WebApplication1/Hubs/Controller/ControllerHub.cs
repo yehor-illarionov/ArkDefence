@@ -3,7 +3,6 @@ using Finbuckle.MultiTenant;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApplication1.Data;
@@ -11,10 +10,6 @@ using WebApplication1.Data;
 
 namespace WebApplication1.Hubs
 {
-    public static class UserHandler
-    {
-        public static List<string> ConnectedIds = new List<string>();
-    }
 
     [Authorize]
     public class ControllerHub : Hub<IControllerClient>
@@ -48,7 +43,7 @@ namespace WebApplication1.Hubs
         /// 
         /// </summary>
         /// <param name="address">autho0 client id</param>
-        /// <param name="timeout">0<x<255</param>
+        /// <param name="timeout">0&lt;x&lt;255</param>
         /// <param name="port">linux system port e.g. /dev/ttyS0</param>
         /// <returns></returns>
         public async Task SetFingerTimeoutTo(string address, int timeout, string port)
@@ -111,80 +106,4 @@ namespace WebApplication1.Hubs
             return base.OnDisconnectedAsync(exception);
         }
     }
-
-    public interface IControllerClient
-    {
-        #region huinya
-        Task GetFingerTimeout();
-        Task GetUsers(List<string> users);
-        #endregion
-
-        Task SetFingerTimeout(SetFingerTimeoutReq req);
-        Task GetFingerTimeoutCurrent(GetFingerTimeoutReq req);
-        Task AddFinger(AddFingerReq req);
-        Task SendConfig(SendConfigReq req);
-        Task GetConfig(GetConfigReq req);
-        Task ReceiveConfig(GetConfigRes res);
-        Task DeleteAllFingerprints(DeleteAllFingerprintsReq req);
-        Task DeleteFingerById(DeleteFingerByIdReq req);
-        Task AddFingerByBle(AddFingerByBleReq req);
-    }
-
-    #region client requests
-    public class GetConfigReq
-    {
-        public string Port { get; set; }
-        public string Address { get; set; }
-    }
-
-    public class GetConfigRes
-    {
-        public string JsonString { get; set; }
-        public string Port { get; set; }
-    }
-    public class SetFingerTimeoutReq
-    {
-        public int Timeout { get; set; }
-        public string Port { get; set; }
-    }
-
-    public class GetFingerTimeoutReq
-    {
-        public string Port { get; set; }
-    }
-
-    public class AddFingerReq
-    {
-        public int Uid { get; set; }
-        public int Privilage { get; set; }
-        public string Port { get; set; }
-    }
-
-    public  class SendConfigReq
-    {
-        public string JsonString { get; set; }
-        public string Port { get; set; }
-    }
-
-    public class DeleteAllFingerprintsReq
-    {
-        public string Port { get; set; }
-    }
-
-    public class DeleteFingerByIdReq 
-    {
-        public int Id { get; set; }
-        public string Port { get; set; }
-    }
-
-    public class AddFingerByBleReq
-    {
-        public string UserId { get; set; }
-        public string Ble { get; set; }
-        public int Id { get; set; }
-        public int Privilage { get; set; }
-        public string Port { get; set; }
-    }
-
-    #endregion
 }

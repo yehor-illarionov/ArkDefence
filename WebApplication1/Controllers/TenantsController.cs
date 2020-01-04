@@ -40,7 +40,7 @@ namespace WebApplication1.Controllers
             return this.Ok();
         }
 
-           /// <summary>
+        /// <summary>
         /// Returns an Allow HTTP header with the allowed HTTP methods for a tenant with the specified unique identifier.
         /// </summary>
         /// <param name="tenantId">The tetant unique identifier.</param>

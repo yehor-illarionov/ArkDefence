@@ -1,17 +1,11 @@
-﻿using System;
-using Enexure.MicroBus;
+﻿using MassTransit;
+using System;
 
 namespace WebApplication1.Messaging.Events
 {
-    internal class PersonCreated : IEvent
+    public interface PersonCreated : CorrelatedBy<Guid>
     {
-        private long id;
-        private DateTime creationTime;
-
-        public PersonCreated(long id, DateTime creationTime)
-        {
-            this.id = id;
-            this.creationTime = creationTime;
-        }
+        long Id { get; }
+        DateTime CreationTime { get; } 
     }
 }

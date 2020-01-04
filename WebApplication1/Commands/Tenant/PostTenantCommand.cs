@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Boxed.Mapping;
-using Enexure.MicroBus;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Constants;
@@ -21,21 +21,21 @@ namespace WebApplication1.Commands
         private readonly ITenantRepository tenantRepository;
         private readonly IMapper<Data.Tenant, ViewModels.Tenant> tenantToTenantMapper;
         private readonly IMapper<SaveTenant, Data.Tenant> saveTenantToTenantMapper;
-        private readonly IMicroBus bus;
+        private readonly IBus bus;
         private readonly IHostTenantInfo host;
 
         public PostTenantCommand(
             ITenantRepository tenantRepository, 
             IMapper<Data.Tenant, ViewModels.Tenant> tenantToTenantMapper, 
             IMapper<SaveTenant, Data.Tenant> saveTenantToTenantMapper,
-            IMicroBus bus,
+            IBus bus,
             IHostTenantInfo host)
         {
             this.tenantRepository = tenantRepository ?? throw new ArgumentNullException(nameof(tenantRepository));
             this.tenantToTenantMapper = tenantToTenantMapper ?? throw new ArgumentNullException(nameof(tenantToTenantMapper));
             this.saveTenantToTenantMapper = saveTenantToTenantMapper ?? throw new ArgumentNullException(nameof(saveTenantToTenantMapper));
             this.bus = bus ?? throw new ArgumentNullException(nameof(bus));
-            host = host ?? throw new ArgumentNullException(nameof(host));
+            this.host = host ?? throw new ArgumentNullException(nameof(host));
         }
 
         public async Task<IActionResult> ExecuteAsync(SaveTenant parameter, CancellationToken cancellationToken = default)
@@ -46,10 +46,10 @@ namespace WebApplication1.Commands
             }
             else
             {
-                //if (this.TestConnection(host.TenantInfo(), parameter.ConnectionString)== false)
-                //{
-                //    return new StatusCodeResult(417);//Expectation failed
-                //}
+                if (this.TestConnection(host.TenantInfo(), parameter.ConnectionString) == false)
+                {
+                    return new StatusCodeResult(417);//Expectation failed
+                }
             }
 
             var tenant = saveTenantToTenantMapper.Map(parameter);
@@ -64,13 +64,25 @@ namespace WebApplication1.Commands
             }
             var tenantViewModel = tenantToTenantMapper.Map(tenant);
 
-            if (parameter.IsDefaultConnection)
+            if (parameter.IsDefaultConnection==true)
             {
-                await bus.PublishAsync(new TenantCreated(tenant.Id, tenant.Created.UtcDateTime)).ConfigureAwait(false);
+                await bus.Publish<TenantCreated>(new
+                {
+                    Id = tenant.Id,
+                    CreationTime = tenant.Created.UtcDateTime
+                }) ;
             }
             else
             {
-                await bus.PublishAsync(new TenantCreatedNotDefault(tenant.Id, tenant.Created.UtcDateTime)).ConfigureAwait(false);
+                
+                await bus.ScheduleMessage<TenantCreatedNotDefault>(
+                    new Uri("loopback://localhost/tenant-created-notdefault"),
+                    DateTime.UtcNow.AddSeconds(30),
+                    (TenantCreatedNotDefault)(new 
+                    {
+                        Id = tenant.Id,
+                        CreationTime = tenant.Created.UtcDateTime
+                    }));
             }
            
             return new CreatedAtRouteResult(

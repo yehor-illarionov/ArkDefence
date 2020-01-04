@@ -2,10 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using Enexure.MicroBus;
-using Enexure.MicroBus.Autofac;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -35,7 +31,7 @@ using Boxed.AspNetCore.Swagger.OperationFilters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Boxed.AspNetCore.Swagger.SchemaFilters;
-using WebApplication1.Handlers;
+using WebApplication1.Consumers;
 
 namespace WebApplication1
 {
@@ -48,8 +44,6 @@ namespace WebApplication1
         }
 
         private readonly IWebHostEnvironment _hostContext;
-        public ILifetimeScope Container { get; private set; }
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -159,25 +153,12 @@ namespace WebApplication1
                 .PersistKeysToDbContext<KeysContext>();
             services.AddHttpContextAccessor()
                     .AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+            services.AddCustomMasstransit();
             services.AddProjectCommands();
             services.AddProjectRepositories();
             services.AddProjectMappers();
             services.AddProjectServices();
-        }
-
-        // ConfigureContainer is where you can register things directly
-        // with Autofac. This runs after ConfigureServices so the things
-        // here will override registrations made in ConfigureServices.
-        // Don't build the container; that gets done for you. If you
-        // need a reference to the container, you need to use the
-        // "Without ConfigureContainer" mechanism shown later.
-        public void ConfigureContainer(ContainerBuilder builder)
-        {
-            //var busBuilder = new BusBuilder()
-            //  .RegisterHandlers(Assembly.GetEntryAssembly());
-            // // .RegisterGlobalHandler<TenantCreatedHandler>();
-               
-            //builder.RegisterMicroBus(busBuilder);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -203,6 +184,24 @@ namespace WebApplication1
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 
             });
+            app.UseReDoc(c=> 
+            {
+                c.SpecUrl("/swagger/v1/swagger.json");
+                //c.UntrustedSpec();
+                c.ScrollYOffset(10);
+                c.HideHostname();
+                c.HideDownloadButton();
+                c.ExpandResponses("200,201");
+                c.RequiredPropsFirst();
+                c.NoAutoAuth();
+                c.PathInMiddlePanel();
+                c.HideLoading();
+                c.NativeScrollbars();
+                //c.DisableSearch();
+                //c.OnlyRequiredInSamples();
+                c.SortPropsAlphabetically();
+        });
+
             app.UseRouting();
             app.UseMultiTenant();
             app.UseAuthentication();
