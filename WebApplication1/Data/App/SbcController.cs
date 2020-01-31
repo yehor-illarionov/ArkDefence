@@ -6,7 +6,7 @@ using System.Text;
 using WebApplication1.Data;
 using WebApplication1.Data.App;
 
-namespace Core.Domain
+namespace WebApplication1.Data.App
 {
     /// <summary>
     /// Application Hash Context : App.v1
@@ -26,5 +26,15 @@ namespace Core.Domain
         public Site Site { get; set; }
         public ControllerVersionIndex VersionIndex { get; set; }
         public List<Terminal> Terminals { get; set; }
+
+        public void AddTerminal(long terminalId)
+        {
+
+        }
+
+        public void RemoveTerminal(long terminalId)
+        {
+
+        }
     }
 }

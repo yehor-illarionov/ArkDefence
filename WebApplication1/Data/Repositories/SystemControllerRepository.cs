@@ -7,11 +7,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApplication1.Data.App;
 using WebApplication1.Exceptions;
 
 namespace WebApplication1.Data
 {
-    internal sealed class SystemControllerRepository
+    internal sealed class SystemControllerRepository : ISystemControllerRepository
     {
         private readonly NextAppContext context;
         private readonly IDataProtectionProvider provider;
@@ -25,17 +26,17 @@ namespace WebApplication1.Data
             optionsBuilder.UseNpgsql("Server=127.0.0.1;Port=5432;Database=arkdefence;User Id=postgres;Password=BmHkYi5436!;");//TODO dynamic
             this.context = new NextAppContext(tenantInfo, optionsBuilder.Options);
             this.provider = provider ?? throw new ArgumentNullException(nameof(provider));
-            protector=provider.CreateProtector("App.v1");//TODO dynamic protector
+            protector = provider.CreateProtector("App.v1");//TODO dynamic protector
         }
 
-        public async Task<bool> AddController(CreateControllerDto controller)
+        public async Task<bool> Add(CreateControllerDto controller)
         {
             if (tenantInfo.Name != Host)
             {
                 //throw new HttpResponseException() { Status = 403, Value = "Only Host allowed to add Controllers" };
                 return false;
             }
-            var ClientIdHash=protector.Protect(controller.ClientId);
+            var ClientIdHash = protector.Protect(controller.ClientId);
             var ClientSecretHash = protector.Protect(controller.ClientSecret);
             //var hostTenant = await context.TryGetAsync("tenant-host").ConfigureAwait(false);
             //var optionsBuilder = new DbContextOptionsBuilder<NextAppContext>();
@@ -52,9 +53,9 @@ namespace WebApplication1.Data
             return true;
         }
 
-        public async Task<IEnumerable<ResController>> GetAllAsync()
+        public async Task<IEnumerable<ResController>> GetAll()
         {
-            var sbcs = context.Controllers.AsNoTracking().Include(c=>c.Terminals).ToList();
+            var sbcs = context.Controllers.AsNoTracking().Include(c => c.Terminals).ToList();
             var res = new List<ResController>();
             if (tenantInfo.Name != Host)
             {
@@ -79,20 +80,20 @@ namespace WebApplication1.Data
             return res;
         }
 
-        public async Task<bool> AddTerminalAsync(long controllerId, long terminalId)
+        public async Task<bool> AddTerminal(long controllerId, long terminalId)
         {
             context.EnsureAutoHistory();
-            var controller = context.Controllers.Where(c=>c.Id==controllerId).Include(c => c.Terminals).FirstOrDefault();
-            if(!(controller is null))
+            var controller = context.Controllers.Where(c => c.Id == controllerId).Include(c => c.Terminals).FirstOrDefault();
+            if (!(controller is null))
             {
-                if(controller.Terminals is null)
+                if (controller.Terminals is null)
                 {
                     controller.Terminals = new List<App.Terminal>();
                 }
                 var terminal = context.Terminals.Where(t => t.Id == terminalId).Include(c => c.Controller).FirstOrDefault();
-                if(!(terminal is null))
+                if (!(terminal is null))
                 {
-                    if(!(terminal.Controller is null))
+                    if (!(terminal.Controller is null))
                     {
                         return false;
                     }

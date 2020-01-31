@@ -29,7 +29,7 @@ namespace WebApplication1.Controllers
         {
             var tenantInfo = HttpContext.GetMultiTenantContext().TenantInfo;
             var repo = new SystemControllerRepository(tenantInfo, provider);
-            return await repo.GetAllAsync();
+            return await repo.GetAll();
         }
 
         // GET: api/Controller/5
@@ -45,7 +45,7 @@ namespace WebApplication1.Controllers
         {
             var tenantInfo = HttpContext.GetMultiTenantContext().TenantInfo;
             var repo = new SystemControllerRepository(tenantInfo, provider);
-            bool res=await repo.AddController(value);
+            bool res=await repo.Add(value);
             if (!res)
             {
                 throw new HttpResponseException() { Status=403};

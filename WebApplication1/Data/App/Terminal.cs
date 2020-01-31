@@ -17,37 +17,4 @@ namespace WebApplication1.Data.App
         public TerminalVersionIndex VersionIndex { get; set; }
         public ICollection<TerminalConfig> TerminalConfigs { get; set; }
     }
-
-    public class TerminalConfig : Entity<long>
-    {
-        public long TerminalId { get; set; }
-        public Terminal Terminal { get; set; }
-        public long ConfigId { get; set; }
-        public TerminalConfigTemplate TerminalConfigTemplate { get; set; }
-        public bool IsActive { get; set; }
-    }
-
-    public class TerminalConfigTemplate : Entity<long>
-    {
-        public string Alias { get; set; }
-        public int FingerTimeout { get; set; }//in seconds
-        public int BleDistance { get; set; }
-        public bool IsBleEnabled { get; set; }
-        public bool IsCardEnabled { get; set; }
-        public bool IsFingerEnabled { get; set; }
-        public bool HasBle { get; set; }
-        public bool HasCard { get; set; }
-        public bool HasFinger { get; set; }
-        public TerminalModes Mode { get; set; }
-        public TerminalVersionIndex HardwareIndex { get; set; }
-        public ICollection<TerminalConfig> TerminalConfigs { get; set; }
-
-    }
-
-    public enum TerminalModes
-    {
-        NotSet=0,
-        Strict,
-        NotStrict
-    }
 }
